@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Joseph's Turbo Quest Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FFF;
+  --blue-deep:#0A47C2;
+  --cyan:#00D4FF;
+  --red:#EE3B32;
+  --red-deep:#C41E17;
+  --gold:#FFC72C;
+  --gold-deep:#E0A400;
+  --green:#22B24C;
+  --green-deep:#178A38;
+  --purple:#7B4FE0;
+  --dark:#12163A;
+  --dark-soft:#4A5080;
+  --cream:#F2F7FF;
+  --white:#FFFFFF;
+  --shadow: 0 8px 0 rgba(18,22,58,0.18);
+  --radius: 26px;
+  --speed: linear-gradient(90deg, var(--blue), var(--cyan), var(--gold), var(--red), var(--purple), var(--blue));
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Quicksand',sans-serif;
+  background:
+    radial-gradient(circle at 6% 10%, rgba(30,111,255,0.16) 0%, transparent 40%),
+    radial-gradient(circle at 94% 8%, rgba(238,59,50,0.14) 0%, transparent 40%),
+    radial-gradient(circle at 12% 90%, rgba(255,199,44,0.18) 0%, transparent 42%),
+    radial-gradient(circle at 90% 90%, rgba(123,79,224,0.16) 0%, transparent 42%),
+    radial-gradient(circle at 50% 50%, rgba(0,212,255,0.08) 0%, transparent 55%),
+    var(--cream);
+  color:var(--dark);
+  min-height:100vh;
+  -webkit-tap-highlight-color: transparent;
+  position:relative;
+}
+body::before{
+  content:'⭐  🍄  💰  ⚡  🏁  ⭐  🍄  💰  ⚡  🏁';
+  position:fixed;inset:-40px auto auto -20px;width:140%;
+  font-size:26px;line-height:3.4;letter-spacing:22px;
+  opacity:0.06;color:var(--blue-deep);
+  pointer-events:none;z-index:0;white-space:pre-wrap;transform:rotate(-6deg);
+}
+body::after{
+  content:'🏁  ⚡  💰  🍄  ⭐  🏁  ⚡  💰  🍄  ⭐';
+  position:fixed;inset:auto -20px -40px auto;width:140%;
+  font-size:26px;line-height:3.4;letter-spacing:22px;
+  opacity:0.06;color:var(--red-deep);
+  pointer-events:none;z-index:0;white-space:pre-wrap;transform:rotate(-6deg);
+}
+h1,h2,h3,h4,.display{font-family:'Baloo 2',cursive;}
+button{font-family:'Quicksand',sans-serif;cursor:pointer;}
+.app{max-width:900px;margin:0 auto;padding:16px 16px 60px;position:relative;z-index:1;}
+.speed-strip{height:8px;border-radius:8px;background:var(--speed);background-size:200% 100%;margin-bottom:14px;animation:speedmove 5s linear infinite;}
+@keyframes speedmove{0%{background-position:0% 0;}100%{background-position:200% 0;}}
+
+/* ---------- HEADER / NAV ---------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);
+  border-radius:24px;
+  border:3px solid #dbe8ff;
+  padding:12px 18px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+  gap:10px;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.topbar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:7px;
+  background:var(--speed);background-size:200% 100%;animation:speedmove 5s linear infinite;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-badge{
+  width:50px;height:50px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--red));
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  box-shadow:0 4px 0 rgba(0,0,0,0.15);
+  border:3px solid white;outline:2px solid #ffe08a;
+}
+.brand-text{line-height:1.05;}
+.brand-text .t1{font-size:12px;color:var(--red-deep);font-weight:800;letter-spacing:0.5px;}
+.brand-text .t2{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--blue-deep),var(--red-deep));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.coin-counter{
+  display:flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#fff2c9,#ffe090);
+  border-radius:20px;padding:8px 14px;font-weight:800;color:#8a5c00;
+  font-family:'Baloo 2',cursive;font-size:16px;border:2px solid #ffdc8a;
+}
+nav.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;margin-bottom:6px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+nav.tabs button{
+  flex:0 0 auto;border:none;border-radius:18px;padding:10px 16px;
+  background:var(--white);color:var(--dark-soft);font-weight:700;font-size:14px;
+  box-shadow:0 4px 0 rgba(18,22,58,0.08);transition:transform .12s ease;
+  border:2px solid #e4edff;
+}
+nav.tabs button.active{
+  background:linear-gradient(135deg,var(--blue),var(--blue-deep));
+  color:white;box-shadow:0 4px 0 rgba(18,22,58,0.25);border-color:transparent;
+}
+nav.tabs button:active{transform:translateY(2px);}
+
+/* ---------- CARDS ---------- */
+.card{
+  background:var(--white);border-radius:var(--radius);padding:22px;
+  box-shadow:var(--shadow);margin-bottom:18px;position:relative;overflow:hidden;
+  border:3px solid #e4edff;
+}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:var(--speed);background-size:200% 100%;animation:speedmove 6s linear infinite;}
+.card::after{content:'⭐';position:absolute;top:14px;right:16px;font-size:22px;opacity:0.45;transform:rotate(12deg);}
+.card h2{margin:0 0 4px;font-size:24px;}
+.card .sub{color:var(--dark-soft);font-size:14px;margin-bottom:14px;font-weight:600;}
+.big-btn{
+  border:none;border-radius:20px;padding:16px 22px;font-weight:800;font-size:17px;
+  color:white;background:linear-gradient(135deg,var(--red),var(--red-deep));
+  box-shadow:0 5px 0 rgba(196,30,23,0.4);width:100%;font-family:'Baloo 2',cursive;
+  transition:transform .1s ease;
+}
+.big-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(196,30,23,0.4);}
+.big-btn.blue{background:linear-gradient(135deg,var(--blue),var(--blue-deep));box-shadow:0 5px 0 rgba(10,71,194,0.4);}
+.big-btn.green{background:linear-gradient(135deg,var(--green),var(--green-deep));box-shadow:0 5px 0 rgba(23,138,56,0.4);}
+.big-btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep));box-shadow:0 5px 0 rgba(224,164,0,0.4);color:#5c3f00;}
+.big-btn.purple{background:linear-gradient(135deg,var(--purple),#5b34b8);box-shadow:0 5px 0 rgba(91,52,184,0.4);}
+.big-btn:disabled{opacity:0.4;box-shadow:none;transform:none;}
+.pill{display:inline-block;padding:5px 12px;border-radius:14px;font-size:12px;font-weight:800;background:#eaf1ff;color:var(--blue-deep);}
+
+/* ---------- HOME / DAY GRID ---------- */
+.mascot-row{display:flex;justify-content:center;gap:14px;margin:6px 0 18px;font-size:40px;flex-wrap:wrap;}
+.mascot-row span{background:var(--white);border-radius:50%;width:74px;height:74px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);border:3px solid #dbe8ff;outline:2px dashed #cfe0ff;outline-offset:3px;}
+@media(max-width:420px){.mascot-row{gap:8px;font-size:32px;}.mascot-row span{width:58px;height:58px;}}
+.day-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:10px;}
+.day-chip{
+  border:none;border-radius:16px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:18px;background:#eaf1ff;color:var(--blue-deep);
+  box-shadow:0 4px 0 rgba(30,111,255,0.2);gap:2px;border:2px solid #d9e6ff;
+}
+.day-chip .lbl{font-size:9px;font-weight:700;opacity:0.75;}
+.day-chip.done{background:linear-gradient(135deg,var(--green),var(--green-deep));color:white;box-shadow:0 4px 0 rgba(23,138,56,0.4);border-color:transparent;}
+.day-chip.today{background:linear-gradient(135deg,var(--red),var(--red-deep));color:white;box-shadow:0 4px 0 rgba(196,30,23,0.4);border-color:transparent;}
+.day-chip.locked{opacity:0.4;}
+.progressbar{height:14px;border-radius:10px;background:#eaf1ff;overflow:hidden;margin:8px 0 4px;border:1px solid #d9e6ff;}
+.progressbar > div{height:100%;background:var(--speed);background-size:200% 100%;animation:speedmove 4s linear infinite;border-radius:10px;transition:width .4s ease;}
+
+/* ---------- DAY VIEW / SECTIONS ---------- */
+.section-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.section-grid{grid-template-columns:1fr;}}
+.section-card{border-radius:20px;padding:16px;background:#f7faff;border:2px solid #dbe8ff;display:flex;flex-direction:column;gap:8px;position:relative;transition:transform .12s ease;}
+.section-card:active{transform:scale(0.97);}
+.section-card.complete{border-color:var(--green);background:#eefdf2;}
+.section-card .icon{font-size:30px;}
+.section-card h3{margin:0;font-size:16px;}
+.section-card p{margin:0;font-size:13px;color:var(--dark-soft);font-weight:600;}
+.check-badge{position:absolute;top:10px;right:10px;font-size:20px;}
+
+/* ---------- FLASHCARD / GAME AREA ---------- */
+.stage{border-radius:24px;padding:24px;text-align:center;background:linear-gradient(160deg,#eaf3ff,#fff7e0 55%,#ffecec);border:3px dashed #b9d3ff;position:relative;overflow:hidden;}
+.stage::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--speed);background-size:200% 100%;animation:speedmove 5s linear infinite;}
+.flash-emoji{font-size:90px;line-height:1;margin-bottom:6px;}
+.flash-big-letter{font-family:'Baloo 2',cursive;font-size:100px;font-weight:800;background:linear-gradient(135deg,var(--blue-deep),var(--red-deep));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;}
+.flash-caption{font-size:20px;font-weight:700;margin-top:6px;}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;}
+.opt-btn{border:none;border-radius:18px;padding:18px 10px;font-size:19px;font-weight:800;background:white;box-shadow:0 4px 0 rgba(18,22,58,0.12);font-family:'Baloo 2',cursive;color:var(--dark);border:2px solid #eaf1ff;}
+.opt-btn.correct{background:linear-gradient(135deg,var(--green),var(--green-deep));color:white;border-color:transparent;}
+.opt-btn.wrong{background:linear-gradient(135deg,#ff9d9d,#e56b6b);color:white;border-color:transparent;}
+.hint-box{margin-top:16px;background:#fff7e0;border-radius:16px;padding:12px 16px;font-weight:700;color:#7a5b00;font-size:14px;text-align:left;border:2px solid #ffe8a8;}
+.feedback{margin-top:14px;font-family:'Baloo 2',cursive;font-size:19px;}
+.tries-dots{display:flex;gap:6px;justify-content:center;margin-top:10px;}
+.tries-dots span{width:10px;height:10px;border-radius:50%;background:#dbe8ff;}
+.tries-dots span.used{background:var(--red);}
+.tier-badge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#5c3f00;padding:4px 12px;border-radius:12px;font-weight:800;font-size:12px;margin-bottom:8px;}
+
+/* Tracing */
+canvas.trace-canvas{width:100%;max-width:360px;height:260px;background:white;border-radius:20px;border:3px solid #b9d3ff;touch-action:none;display:block;margin:0 auto;}
+.trace-controls{display:flex;gap:10px;justify-content:center;margin-top:12px;}
+.small-btn{border:none;border-radius:14px;padding:10px 16px;font-weight:700;background:#eaf1ff;color:var(--blue-deep);border:2px solid #d9e6ff;}
+
+/* Memory match */
+.memgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:420px;margin:0 auto;}
+.memcard{aspect-ratio:1/1;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:24px;color:white;box-shadow:0 4px 0 rgba(18,22,58,0.2);}
+.memcard.flipped,.memcard.matched{background:white;color:var(--dark);}
+.memcard.matched{background:linear-gradient(135deg,var(--green),var(--green-deep));color:white;}
+
+/* Reading corner */
+.book-cover{width:100%;border-radius:18px;background:linear-gradient(135deg,#dbe8ff,#fff2c9 55%,#ffdada);padding:24px;text-align:center;margin-bottom:14px;border:3px solid #b9d3ff;position:relative;overflow:hidden;}
+.book-cover::before{content:'⭐';position:absolute;top:8px;left:12px;font-size:22px;opacity:0.6;}
+.book-cover::after{content:'💰';position:absolute;top:8px;right:12px;font-size:22px;opacity:0.6;}
+.book-cover .emoji{font-size:56px;}
+.vocab-chip{display:inline-block;background:#eafaf0;color:#1d7a4a;border-radius:12px;padding:6px 12px;font-weight:700;font-size:13px;margin:4px 4px 0 0;border:1px solid #c9f2d8;}
+ul.fun-list{padding-left:18px;margin:6px 0;}
+ul.fun-list li{margin-bottom:6px;font-size:14px;font-weight:600;color:var(--dark-soft);}
+
+/* Rewards */
+.sticker-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:10px;}
+.sticker{font-size:34px;background:#f7faff;border-radius:14px;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;box-shadow:0 3px 0 rgba(18,22,58,0.1);border:2px solid #dbe8ff;}
+.sticker.locked{opacity:0.25;filter:grayscale(1);}
+
+/* Parent dashboard bars */
+.bar-row{margin-bottom:12px;}
+.bar-row .lbl{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px;}
+.bar-track{height:12px;background:#eaf1ff;border-radius:8px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:8px;}
+
+/* Confetti */
+.confetti-piece{position:fixed;top:-20px;width:10px;height:16px;opacity:0.9;z-index:999;border-radius:3px;animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:0.3;}}
+
+/* Modal / celebration */
+.overlay{position:fixed;inset:0;background:rgba(18,22,58,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;}
+.modal{background:white;border-radius:28px;padding:28px;max-width:360px;text-align:center;box-shadow:0 12px 0 rgba(0,0,0,0.15);border:4px solid transparent;background-image:linear-gradient(white,white),var(--speed);background-origin:border-box;background-clip:padding-box, border-box;}
+.modal .big-emoji{font-size:64px;}
+
+footer.note{text-align:center;font-size:11px;color:var(--dark-soft);opacity:0.75;margin-top:20px;line-height:1.5;}
+.backbtn{background:none;border:none;color:var(--blue-deep);font-weight:800;font-size:14px;margin-bottom:10px;padding:6px 0;}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+/* =========================================================
+   DATA
+   Joseph is a bright kindergartner turning 6, heading to 1st grade.
+   14 days review K skills + stretch into 1st grade concepts.
+   Every math & reading section is adaptive across 3 tiers:
+   Tier 1 = solid K review, Tier 2 = K mastery / early 1st, Tier 3 = 1st grade stretch challenge.
+   ========================================================= */
+
+// Each day has a math focus and a reading/phonics focus
+const DAY_FOCUS = [
+ {day:1,  mathTopic:'countTo20',      readTopic:'cvc',        sightSet:['the','see','like','go','can']},
+ {day:2,  mathTopic:'addTo10',        readTopic:'rhyme',      sightSet:['I','you','my','we','look']},
+ {day:3,  mathTopic:'subTo10',        readTopic:'blendBL_CL_FL', sightSet:['have','said','was','they']},
+ {day:4,  mathTopic:'shapes2D',       readTopic:'blendST_TR_SP', sightSet:['come','some','play','little']},
+ {day:5,  mathTopic:'patterns',       readTopic:'digraphSH_CH', sightSet:['what','when','where','who']},
+ {day:6,  mathTopic:'skipCount2',     readTopic:'cvce',       sightSet:['make','take','ride','time']},
+ {day:7,  mathTopic:'placeValue',     readTopic:'comprehension1', sightSet:['there','their','said','were']},
+ {day:8,  mathTopic:'addTo20',        readTopic:'compoundWords', sightSet:['about','after','again','could']},
+ {day:9,  mathTopic:'subTo20',        readTopic:'digraphWH_TH', sightSet:['because','before','friend','other']},
+ {day:10, mathTopic:'timeHour',       readTopic:'blendGR_PL_SW', sightSet:['every','never','always','through']},
+ {day:11, mathTopic:'measurement',    readTopic:'longVowelTeams', sightSet:['school','which','write','right']},
+ {day:12, mathTopic:'money',          readTopic:'comprehension2', sightSet:['does','goes','been','into']},
+ {day:13, mathTopic:'skipCount5_10',  readTopic:'contractions', sightSet:['once','upon','today','soon']},
+ {day:14, mathTopic:'mixedReview',    readTopic:'mixedReview', sightSet:['first','second','third','next','last']}
+];
+
+const BOOKS = [
+ {
+   id:'frogtoad', title:'Frog and Toad Are Friends', author:'Arnold Lobel', emoji:'🐸',
+   days:[1,2,3,4],
+   videoUrl:'https://www.youtube.com/watch?v=ZnaiSve4duE',
+   videoLabel:'Frog and Toad Are Friends — Read-Along Video',
+   summary:"Frog and Toad share five gentle little adventures about friendship — waiting for spring, losing a button, telling stories, swimming, and writing a letter — showing how good friends look out for each other.",
+   moment:"A favorite moment is when Frog cheers Toad up by making up a silly story, showing kindness matters more than getting things perfect.",
+   vocab:['friend','together','patient','button','adventure'],
+   funFacts:['This book is actually five short stories in one, so it is perfect for reading a little each day.','Frog and Toad are famous best friends in easy-reader books.','This story has won a Caldecott Honor award for its pictures.'],
+   discussion:['What does it mean to be a good friend like Frog?','Why was Toad upset about his missing button?','Can you think of a time you helped a friend feel better?'],
+   lesson:'True friends stay kind and patient with each other, even when things do not go as planned.',
+   activity:'Draw a picture of you and a friend doing something fun together, just like Frog and Toad.'
+ },
+ {
+   id:'elephantpiggie', title:'We Are in a Book!', author:'Mo Willems', emoji:'🐘',
+   days:[5,6,7],
+   videoUrl:'https://www.youtube.com/watch?v=LYZbsdHvl2s',
+   videoLabel:'We Are in a Book! — Kids Book Read Aloud',
+   summary:"Gerald the Elephant and Piggie discover something amazing — they are characters inside a book, and a reader is watching them! They have fun making the reader say a silly word, then worry about what happens when the book ends.",
+   moment:"The funniest part is when Gerald and Piggie realize they can make the reader say 'Banana!' just by asking.",
+   vocab:['reader','character','page','word','ending'],
+   funFacts:['This book breaks the fourth wall, meaning the characters talk directly to you, the reader!','Mo Willems uses very few words but tells a big story through pictures and expressions.','The book has won many awards for helping new readers love books.'],
+   discussion:['What silly word did Gerald and Piggie want you to say?','How did the characters feel about the book ending?','What would you do if you found out you were in a book?'],
+   lesson:'Even when something feels like it is ending, there is always a way to start a new adventure — you can just read it again!',
+   activity:'Come up with your own silly word and ask a family member to say it out loud, just like in the book.'
+ },
+ {
+   id:'mercywatson', title:'Mercy Watson to the Rescue', author:'Kate DiCamillo', emoji:'🐷',
+   days:[8,9,10,11],
+   videoUrl:'https://www.youtube.com/watch?v=UL7ipvlaO38',
+   videoLabel:'Mercy Watson to the Rescue — Read Aloud',
+   summary:"Mercy is a lovable pig who thinks of herself as a 'porcine wonder.' When the Watsons' bed starts to break in the middle of the night, only Mercy's love of buttered toast can save the day.",
+   moment:"The best part is watching Mercy race toward the smell of warm buttered toast, not realizing she is actually being a hero.",
+   vocab:['porcine',' wonder','rescue','neighbor','buttered toast'],
+   funFacts:['This is the first book in a whole series about Mercy the pig.','The story is broken into short chapters, great practice for first-grade chapter books.','Mercy loves buttered toast so much it becomes a running joke in every book.'],
+   discussion:['Why did the Watsons think Mercy was a hero?','What is your favorite snack, like Mercy loves toast?','What happens when the neighbors get involved?'],
+   lesson:'Sometimes we help others without even meaning to — just by being ourselves.',
+   activity:'Make a list of three things that make YOU a hero, just like Mercy.'
+ },
+ {
+   id:'flyguy', title:'Fly Guy Presents: Dinosaurs', author:'Tedd Arnold', emoji:'🦖',
+   days:[12,13,14],
+   videoUrl:'https://www.youtube.com/watch?v=PrSNsJ7EGfQ',
+   videoLabel:'Fly Guy Presents: Dinosaurs — Read Aloud',
+   summary:"Buzz and his pet fly, Fly Guy, take a nonfiction adventure through dinosaur facts — what they ate, how big they were, and how we learn about them from fossils.",
+   moment:"A favorite fact is learning how scientists figure out what dinosaurs looked like just from studying old bones.",
+   vocab:['fossil','extinct','herbivore','carnivore','paleontologist'],
+   funFacts:['This is a nonfiction book, meaning everything in it is true!','A scientist who studies dinosaurs is called a paleontologist.','Some dinosaurs were smaller than a chicken, while others were longer than a school bus.'],
+   discussion:['What is your favorite dinosaur fact from the book?','What is the difference between a fact and a made-up story?','What job would you want if you could study dinosaurs?'],
+   lesson:'Asking questions and looking for evidence is how we learn true things about the world — just like a scientist.',
+   activity:'Draw your own dinosaur and write (or dictate) one true fact about it.'
+ }
+];
+
+/* =========================================================
+   VIDEO LEARNING LIBRARY
+   Real links to trusted channels where a specific verified video
+   was found; safe filtered-search links (still one click to the
+   right trusted-channel content) for the rest.
+   ========================================================= */
+const MATH_VIDEOS = {
+  countTo20: {title:"Learn to Count 1 to 20 with Numberblocks", url:"https://www.youtube.com/watch?v=FhQ95Q79Hxo", channel:"Numberblocks"},
+  addTo10: {title:"Addition within 10 with Numberblocks", url:"https://www.youtube.com/results?search_query=Numberblocks+addition+within+10", channel:"Numberblocks"},
+  subTo10: {title:"Subtraction within 10 with Numberblocks", url:"https://www.youtube.com/results?search_query=Numberblocks+subtraction+within+10", channel:"Numberblocks"},
+  shapes2D: {title:"2D & 3D Shapes for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+2D+and+3D+shapes", channel:"Khan Academy Kids"},
+  patterns: {title:"Patterns for Kindergarten", url:"https://www.youtube.com/results?search_query=PBS+KIDS+patterns+for+kindergarten", channel:"PBS KIDS"},
+  skipCount2: {title:"Dancing 2's — Skip Count by 2's", url:"https://www.youtube.com/watch?v=OCxvNtrcDIs", channel:"Jack Hartmann"},
+  placeValue: {title:"Tens and Ones Place Value", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+tens+and+ones+place+value", channel:"Jack Hartmann"},
+  addTo20: {title:"Addition within 20 with Numberblocks", url:"https://www.youtube.com/results?search_query=Numberblocks+addition+within+20", channel:"Numberblocks"},
+  subTo20: {title:"Subtraction within 20 with Numberblocks", url:"https://www.youtube.com/results?search_query=Numberblocks+subtraction+within+20", channel:"Numberblocks"},
+  timeHour: {title:"Telling Time to the Hour", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+telling+time+to+the+hour", channel:"Jack Hartmann"},
+  measurement: {title:"Measuring Length for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+measuring+length", channel:"Khan Academy Kids"},
+  money: {title:"Counting Coins for Kids", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+counting+coins+money", channel:"Jack Hartmann"},
+  skipCount5_10: {title:"We Can Count Together — Skip Counting", url:"https://www.youtube.com/watch?v=TShHga40XgQ", channel:"Jack Hartmann"},
+  mixedReview: {title:"Kindergarten Math Review", url:"https://www.youtube.com/results?search_query=Numberblocks+kindergarten+math+review", channel:"Numberblocks"}
+};
+const READ_VIDEOS = {
+  cvc: {title:"CVC Words for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+CVC+words", channel:"Khan Academy Kids"},
+  rhyme: {title:"Rhyming Words Song", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+rhyming+words+song", channel:"Jack Hartmann"},
+  blendBL_CL_FL: {title:"Consonant Blends: bl, cl, fl", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+consonant+blends+bl+cl+fl", channel:"Jack Hartmann"},
+  blendST_TR_SP: {title:"Consonant Blends: st, tr, sp", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+consonant+blends+st+tr+sp", channel:"Jack Hartmann"},
+  digraphSH_CH: {title:"Digraphs: sh, ch for Kids", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+digraphs+sh+ch", channel:"Jack Hartmann"},
+  cvce: {title:"Silent E / Magic E Words", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+silent+e+magic+e", channel:"Khan Academy Kids"},
+  comprehension1: {title:"Reading Comprehension for Kindergarten", url:"https://www.youtube.com/results?search_query=PBS+KIDS+reading+comprehension+kindergarten", channel:"PBS KIDS"},
+  compoundWords: {title:"Compound Words for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+compound+words", channel:"Khan Academy Kids"},
+  digraphWH_TH: {title:"Digraphs: wh, th for Kids", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+digraphs+wh+th", channel:"Jack Hartmann"},
+  blendGR_PL_SW: {title:"Consonant Blends: gr, pl, sw", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+consonant+blends+gr+pl+sw", channel:"Jack Hartmann"},
+  longVowelTeams: {title:"Long Vowel Teams for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+long+vowel+teams", channel:"Khan Academy Kids"},
+  comprehension2: {title:"Reading Comprehension Practice", url:"https://www.youtube.com/results?search_query=PBS+KIDS+reading+comprehension+practice", channel:"PBS KIDS"},
+  contractions: {title:"Contractions for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+contractions", channel:"Khan Academy Kids"},
+  mixedReview: {title:"1st Grade Reading Review", url:"https://www.youtube.com/results?search_query=PBS+KIDS+1st+grade+reading+review", channel:"PBS KIDS"}
+};
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const STORAGE_KEY = 'joseph_turbo_academy_v1';
+function defaultState(){
+  return {
+    coins:0,
+    unlockedDay:1,
+    days:{},
+    tierProgress:{}, // per day+subject tier tracking not strictly needed, engine handles per-session
+    stickers:[],
+  };
+}
+var state = load();
+function load(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return Object.assign(defaultState(), JSON.parse(raw));
+  }catch(e){}
+  return defaultState();
+}
+function save(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){} }
+function dayState(d){
+  if(!state.days[d]) state.days[d] = {math:false,reading:false,sight:false,ninja:false,write:false,memory:false,quiz:false,story:false,video:false,complete:false,videoNotes:{}};
+  const s = state.days[d];
+  if(s.video === undefined) s.video = false;
+  if(!s.videoNotes) s.videoNotes = {};
+  return s;
+}
+function getVideoNotes(d){ return dayState(d).videoNotes; }
+const ALL_SECTIONS = ['math','reading','sight','ninja','write','memory','quiz','story','video'];
+function sectionsDoneCount(d){
+  const s = dayState(d);
+  return ALL_SECTIONS.filter(k=>s[k]).length;
+}
+function markSectionComplete(d, key){
+  const s = dayState(d);
+  if(!s[key]){ s[key]=true; state.coins += 1; addSticker(d,key); }
+  if(ALL_SECTIONS.every(k=>s[k]) && !s.complete){
+    s.complete = true;
+    state.coins += 5;
+    if(state.unlockedDay === d && d < 14) state.unlockedDay = d+1;
+    save();
+    render('celebrate', {day:d});
+    return;
+  }
+  save();
+}
+const STICKER_EMOJIS = ['⭐','💰','⚡','🏁','🍄','🎮','🔵','🏆','🧢','💎','🌟','🚀'];
+function addSticker(d,key){
+  const idx = (d*7 + ALL_SECTIONS.indexOf(key)) % STICKER_EMOJIS.length;
+  state.stickers.push(STICKER_EMOJIS[idx]);
+}
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+function focusForDay(d){ return DAY_FOCUS[d-1]; }
+function bookForDay(d){ return BOOKS.find(b=>b.days.includes(d)) || BOOKS[0]; }
+function shuffle(arr){ return arr.slice().sort(()=>Math.random()-0.5); }
+function pickDistinct(pool, exclude, n){ const filtered = pool.filter(x=>String(x)!==String(exclude)); return shuffle(filtered).slice(0,n); }
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function launchConfetti(){
+  const colors=['#1E6FFF','#00D4FF','#FFC72C','#EE3B32','#7B4FE0','#22B24C'];
+  for(let i=0;i<36;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[i%colors.length];
+    p.style.borderRadius = (i%3===0) ? '50%' : '3px';
+    p.style.animationDuration = (2.2+Math.random()*1.6)+'s';
+    p.style.animationDelay = (Math.random()*0.4)+'s';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 4200);
+  }
+}
+
+/* =========================================================
+   ROUTER / RENDER
+   ========================================================= */
+var view = 'home';
+var ctx = {};
+function goto(v, c={}){ view=v; ctx=c; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+function render(overrideView, overrideCtx){
+  const v = overrideView || view;
+  const c = overrideCtx || ctx;
+  const app = document.getElementById('app');
+  app.innerHTML = topbarHTML() + tabsHTML(v);
+  const wrap = document.createElement('div');
+  app.appendChild(wrap);
+  if(v==='home') wrap.innerHTML = homeHTML();
+  else if(v==='day') wrap.innerHTML = dayHTML(c.day || state.unlockedDay);
+  else if(v==='math') wrap.innerHTML = mathHTML(c.day);
+  else if(v==='reading') wrap.innerHTML = readingPhonicsHTML(c.day);
+  else if(v==='sight') wrap.innerHTML = sightHTML(c.day);
+  else if(v==='ninja') wrap.innerHTML = ninjaHTML(c.day);
+  else if(v==='write') wrap.innerHTML = writeHTML(c.day);
+  else if(v==='memory') wrap.innerHTML = memoryHTML(c.day);
+  else if(v==='quiz') wrap.innerHTML = quizHTML(c.day);
+  else if(v==='story') wrap.innerHTML = storyHTML(c.day);
+  else if(v==='video') wrap.innerHTML = videoHTML(c.day);
+  else if(v==='rewards') wrap.innerHTML = rewardsHTML();
+  else if(v==='parent') wrap.innerHTML = parentHTML();
+  else if(v==='celebrate') { wrap.innerHTML = homeHTML(); showCelebration(c.day); }
+  app.innerHTML += footerHTML();
+  if(v==='write') setTimeout(()=>initTraceCanvas(c.day), 30);
+  if(v==='memory') setTimeout(()=>initMemoryGame(c.day), 30);
+  if(v==='math') setTimeout(()=>startEngine('math-'+c.day, buildMathDeck(c.day), function(){ markSectionComplete(c.day,'math'); goto('day',{day:c.day}); }), 30);
+  if(v==='reading') setTimeout(()=>startEngine('reading-'+c.day, buildReadingDeck(c.day), function(){ markSectionComplete(c.day,'reading'); goto('day',{day:c.day}); }), 30);
+  if(v==='sight') setTimeout(()=>startEngine('sight-'+c.day, buildSightDeck(c.day), function(){ markSectionComplete(c.day,'sight'); goto('day',{day:c.day}); }), 30);
+  if(v==='ninja') setTimeout(()=>startEngine('ninja-'+c.day, buildNinjaDeck(c.day), function(){ markSectionComplete(c.day,'ninja'); goto('day',{day:c.day}); }), 30);
+  if(v==='quiz') setTimeout(()=>startEngine('quiz-'+c.day, buildQuizDeck(c.day), function(){ markSectionComplete(c.day,'quiz'); goto('day',{day:c.day}); }), 30);
+}
+function topbarHTML(){
+  return `<div class="topbar">
+    <div class="brand">
+      <div class="brand-badge">🏁</div>
+      <div class="brand-text"><div class="t1">JOSEPH'S</div><div class="t2">Turbo Quest Academy</div></div>
+    </div>
+    <div class="coin-counter">💰 ${state.coins}</div>
+  </div>`;
+}
+function tabsHTML(v){
+  const tabs = [['home','🏠 Home'],['day','📅 Today'],['story','📚 Reading'],['video','🎬 Videos'],['rewards','🏆 Rewards'],['parent','👨 Parent']];
+  return `<nav class="tabs">${tabs.map(t=>`<button class="${v===t[0]?'active':''}" onclick="goto('${t[0]}'${(t[0]==='day'||t[0]==='story'||t[0]==='video')?', {day: state.unlockedDay}':''})">${t[1]}</button>`).join('')}</nav>`;
+}
+function footerHTML(){
+  return `<footer class="note">Made with love for Joseph, NuNu's Big Boy. ❤️<br>
+  Smart. Handsome. Curious. Brave. This learning adventure was created just for you, inspired by your favorite speedy hero and power-up plumber adventures and designed to make learning fun.<br>
+  Supports Kindergarten Review &amp; 1st Grade Readiness: number sense, addition &amp; subtraction, place value, phonics, sight words, and reading comprehension.</footer>`;
+}
+
+/* =========================================================
+   HOME
+   ========================================================= */
+function homeHTML(){
+  const completedCount = Object.values(state.days).filter(d=>d.complete).length;
+  const pct = Math.round((completedCount/14)*100);
+  let chips = '';
+  for(let d=1; d<=14; d++){
+    const ds = dayState(d);
+    const locked = d > state.unlockedDay;
+    const done = ds.complete;
+    const today = d===state.unlockedDay && !done;
+    chips += `<button class="day-chip ${done?'done':''} ${today?'today':''} ${locked?'locked':''}" ${locked?'disabled':''} onclick="goto('day',{day:${d}})">
+      <div>${done?'✅':d}</div><div class="lbl">Day ${d}</div>
+    </button>`;
+  }
+  return `
+  <div class="card">
+    <div class="mascot-row"><span>🦔</span><span>🍄</span><span>🏁</span><span>⭐</span><span>💰</span></div>
+    <h2 style="text-align:center;">Welcome back, Joseph! 🏁</h2>
+    <p class="sub" style="text-align:center;">${completedCount} of 14 days complete — full speed ahead!</p>
+    <div class="progressbar"><div style="width:${pct}%"></div></div>
+    <div style="margin-top:18px;">
+      <button class="big-btn" onclick="goto('day',{day:${state.unlockedDay > 14 ? 14 : state.unlockedDay}})">▶️ Play Day ${state.unlockedDay > 14 ? 14 : state.unlockedDay}</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🗺️ 14-Day World Map</h2>
+    <p class="sub">Tap any unlocked day to play. Finish all 8 activities to unlock the next level!</p>
+    <div class="day-grid">${chips}</div>
+  </div>`;
+}
+
+/* =========================================================
+   DAY HUB
+   ========================================================= */
+const SECTION_META = {
+  math:{icon:'🔢', title:'Math Mission', desc:d=>mathTopicLabel(focusForDay(d).mathTopic)},
+  reading:{icon:'🔤', title:'Phonics Power-Up', desc:d=>readTopicLabel(focusForDay(d).readTopic)},
+  sight:{icon:'⚡', title:'Sight Word Sprint', desc:d=>`Speed-read today's words`},
+  ninja:{icon:'🎯', title:'Number Ninja', desc:d=>`Skip counting & place value`},
+  write:{icon:'✏️', title:'Writing Gym', desc:d=>`Trace today's words`},
+  memory:{icon:'🧠', title:'Memory Match', desc:d=>`Match & remember`},
+  quiz:{icon:'🏆', title:'Boss Quiz', desc:d=>`Show what you know`},
+  story:{icon:'📖', title:'Story Time', desc:d=>`${bookForDay(d).title}`},
+  video:{icon:'🎬', title:'Video Learning', desc:d=>`Watch & reflect`}
+};
+function mathTopicLabel(t){
+  const map = {countTo20:'Counting to 20+',addTo10:'Addition within 10',subTo10:'Subtraction within 10',shapes2D:'2D & 3D Shapes',
+    patterns:'Patterns',skipCount2:'Skip Counting by 2s',placeValue:'Place Value: Tens & Ones',addTo20:'Addition within 20',
+    subTo20:'Subtraction within 20',timeHour:'Telling Time',measurement:'Measuring Length',money:'Counting Money',
+    skipCount5_10:'Skip Counting by 5s & 10s',mixedReview:'Mixed Math Review'};
+  return map[t] || 'Math';
+}
+function readTopicLabel(t){
+  const map = {cvc:'CVC Words',rhyme:'Rhyming Words',blendBL_CL_FL:'Blends: bl, cl, fl',blendST_TR_SP:'Blends: st, tr, sp',
+    digraphSH_CH:'Digraphs: sh, ch',cvce:'Silent E Words',comprehension1:'Reading Comprehension',compoundWords:'Compound Words',
+    digraphWH_TH:'Digraphs: wh, th',blendGR_PL_SW:'Blends: gr, pl, sw',longVowelTeams:'Long Vowel Teams',comprehension2:'Reading Comprehension',
+    contractions:'Contractions',mixedReview:'Mixed Reading Review'};
+  return map[t] || 'Reading';
+}
+function dayHTML(d){
+  const ds = dayState(d);
+  const done = sectionsDoneCount(d);
+  let cards = '';
+  Object.keys(SECTION_META).forEach(key=>{
+    const meta = SECTION_META[key];
+    const complete = ds[key];
+    cards += `<div class="section-card ${complete?'complete':''}" onclick="goto('${key}',{day:${d}})">
+      ${complete?'<div class="check-badge">✅</div>':''}
+      <div class="icon">${meta.icon}</div>
+      <h3>${meta.title}</h3>
+      <p>${meta.desc(d)}</p>
+    </div>`;
+  });
+  return `
+  <div class="card">
+    <h2>Day ${d} ${ds.complete?'🏆 Complete!':''}</h2>
+    <p class="sub">${done}/8 activities done today · 15-30 minutes total</p>
+    <div class="progressbar"><div style="width:${(done/8)*100}%"></div></div>
+    <div class="section-grid" style="margin-top:14px;">${cards}</div>
+  </div>`;
+}
+function activityHeader(d,title){
+  return `<button class="backbtn" onclick="goto('day',{day:${d}})">← Back to Day ${d}</button>
+  <div class="card"><h2>${title}</h2>`;
+}
+
+/* =========================================================
+   GENERIC ADAPTIVE ENGINE (3-tier escalation)
+   deck: [{stageHTML, options:[{label,correct}], hints:[...], explain, tier}]
+   On correct answer -> advance to next card (which should be a harder tier if available)
+   ========================================================= */
+var engineState = {};
+function startEngine(deckId, deck, onDeckComplete){
+  engineState = {deckId, deck, idx:0, tries:0, locked:false, onDeckComplete};
+  renderEngineCard();
+}
+function renderEngineCard(){
+  const st = engineState;
+  const item = st.deck[st.idx];
+  const stageArea = document.getElementById('engine-stage');
+  const optArea = document.getElementById('engine-opts');
+  const feedArea = document.getElementById('engine-feedback');
+  const dotsArea = document.getElementById('engine-dots');
+  if(!stageArea) return;
+  stageArea.innerHTML = (item.tier ? `<div class="tier-badge">${item.tier}</div>` : '') + item.stageHTML;
+  optArea.innerHTML = item.options.map((o,i)=>`<button class="opt-btn" id="opt-${i}" onclick="answerEngine(${i})">${o.label}</button>`).join('');
+  feedArea.innerHTML='';
+  dotsArea.innerHTML = [0,1,2,3].map(i=>`<span class="${i < st.tries ? 'used':''}"></span>`).join('');
+  st.locked=false;
+  document.getElementById('engine-progress').innerText = `Card ${st.idx+1} of ${st.deck.length}`;
+}
+function answerEngine(i){
+  const st = engineState;
+  if(st.locked) return;
+  const item = st.deck[st.idx];
+  const opt = item.options[i];
+  const feedArea = document.getElementById('engine-feedback');
+  const btn = document.getElementById('opt-'+i);
+  if(opt.correct){
+    st.locked = true;
+    btn.classList.add('correct');
+    feedArea.innerHTML = `<div class="feedback">🏆 Nice! You leveled up!</div>`;
+    setTimeout(()=>{
+      st.idx++; st.tries=0;
+      if(st.idx >= st.deck.length){ if(st.onDeckComplete) st.onDeckComplete(); }
+      else { renderEngineCard(); }
+    }, 1000);
+  } else {
+    btn.classList.add('wrong');
+    st.tries++;
+    if(st.tries >= 4){
+      st.locked = true;
+      feedArea.innerHTML = `<div class="hint-box">💪 Great effort! Here's the answer: <b>${item.options.find(o=>o.correct).label}</b><br>${item.explain}</div>
+      <button class="big-btn green" style="margin-top:12px;" onclick="engineConfirm()">Got it! Keep going ➡️</button>`;
+    } else {
+      feedArea.innerHTML = `<div class="hint-box">💡 Hint ${st.tries}: ${item.hints[Math.min(st.tries-1, item.hints.length-1)]}</div>`;
+      document.getElementById('engine-dots').innerHTML = [0,1,2,3].map(i=>`<span class="${i < st.tries ? 'used':''}"></span>`).join('');
+    }
+  }
+}
+function engineConfirm(){
+  const st = engineState;
+  st.idx++; st.tries=0;
+  if(st.idx >= st.deck.length){ if(st.onDeckComplete) st.onDeckComplete(); }
+  else { renderEngineCard(); }
+}
+function engineFrameHTML(tag){
+  return `<div class="stage">
+    <div class="pill">${tag}</div>
+    <div id="engine-progress" class="sub" style="margin-top:8px;">Card 1</div>
+    <div id="engine-stage" style="margin:14px 0;"></div>
+    <div class="opt-grid" id="engine-opts"></div>
+    <div class="tries-dots" id="engine-dots"></div>
+    <div id="engine-feedback"></div>
+  </div>`;
+}
+
+/* =========================================================
+   MATH MISSION (adaptive 3-tier by day's topic)
+   ========================================================= */
+function mathHTML(d){
+  const topic = focusForDay(d).mathTopic;
+  return activityHeader(d, `🔢 Math Mission: ${mathTopicLabel(topic)}`) +
+    `<p class="sub">Race through 3 levels — each one gets a little trickier!</p>
+    ${engineFrameHTML(mathTopicLabel(topic))}
+    </div>`;
+}
+function numOptions(correct, spread){
+  const distractors = pickDistinct(Array.from({length:30},(_,i)=>i), correct, 3).filter(x=>x>=0);
+  let pool = [];
+  for(let i=1;i<=6;i++){ if(correct-i>=0) pool.push(correct-i); pool.push(correct+i); }
+  pool = shuffle([...new Set(pool)]).slice(0,3);
+  while(pool.length<3){ pool.push(correct + pool.length + 4); }
+  return shuffle([{label:String(correct),correct:true}, ...pool.map(x=>({label:String(x),correct:false}))]);
+}
+function buildMathDeck(d){
+  const topic = focusForDay(d).mathTopic;
+  const builders = {
+    countTo20: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Count the stars!</div><div style="font-size:38px;">${'⭐'.repeat(8)}</div>`, numOptions(8), [`Touch each star and count out loud.`,`Start at 1 and count slowly: 1,2,3...`,`Count with me: 1,2,3,4,5,6,7,8. That's 8!`], `There are 8 stars — count them one at a time.`),
+      mkCard('Tier 2', `<div class="flash-caption">Count the stars!</div><div style="font-size:32px;">${'⭐'.repeat(14)}</div>`, numOptions(14), [`Count in groups of 5 to go faster: 5, 10...`,`Count on from 10: 11, 12, 13...`,`5, 10, and 4 more makes 14!`], `Counting by 5s first (5, 10) then adding the rest makes big counts faster.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">What number comes right after 19?</div>`, shuffle([{label:'20',correct:true},{label:'21',correct:false},{label:'18',correct:false},{label:'10',correct:false}]), [`Count up from 19: 19, then...?`,`After 19 we start a new decade.`,`19, 20 — twenty comes next!`], `After 19 comes 20 — a whole new ten!`)
+    ],
+    addTo10: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:26px;">3 + 2 = ?</div><div style="font-size:34px;">⭐⭐⭐ + ⭐⭐</div>`, numOptions(5), [`Count all the stars together.`,`Start at 3 and count up 2 more: 4, 5.`,`3 and 2 makes 5!`], `3 + 2 = 5. Put the groups together and count them all.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:26px;">6 + 3 = ?</div>`, numOptions(9), [`Start at 6 and count up: 7, 8, 9.`,`Use your fingers: hold up 6, then count 3 more.`,`6 + 3 = 9!`], `Starting at the bigger number and counting on is a fast strategy: 6...7,8,9.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:24px;">7 + 5 = ? (this crosses 10!)</div>`, numOptions(12), [`Make a 10 first: 7 + 3 = 10, then add 2 more.`,`7 + 5 is the same as 10 + 2.`,`7 + 5 = 12. Making a ten helps with bigger problems!`], `Trick: 7+3=10 (that uses 3 of the 5), then add the leftover 2: 10+2=12.`)
+    ],
+    subTo10: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:26px;">5 − 2 = ?</div><div style="font-size:34px;">⭐⭐⭐⭐⭐</div>`, numOptions(3), [`Cross out 2 stars and count what's left.`,`Start at 5 and count back 2: 4, 3.`,`5 take away 2 leaves 3!`], `5 - 2 = 3. Take 2 away from the group and count what remains.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:26px;">9 − 4 = ?</div>`, numOptions(5), [`Count back from 9: 8, 7, 6, 5.`,`Think: what plus 4 equals 9?`,`9 - 4 = 5!`], `You can count back (9,8,7,6,5) or think 'what number plus 4 makes 9?'`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:24px;">10 − 6 = ?</div>`, numOptions(4), [`Think of a ten-frame: 10 boxes, take away 6.`,`10 minus 6 — count back or think of addition: 6 + ? = 10.`,`10 - 6 = 4!`], `10 - 6 = 4. Knowing your 'friends of 10' makes this quick: 6+4=10.`)
+    ],
+    shapes2D: ()=>[
+      mkCard('Tier 1', `<div class="flash-emoji">🔺</div><div class="flash-caption">How many sides does a triangle have?</div>`, shuffle([{label:'3',correct:true},{label:'4',correct:false},{label:'5',correct:false},{label:'2',correct:false}]), [`Count each straight edge.`,`Tri- means three, like tricycle!`,`A triangle has 3 sides and 3 corners.`], `Triangle has 3 sides — 'tri' means three!`),
+      mkCard('Tier 2', `<div class="flash-caption">Which shape has 4 equal sides?</div>`, shuffle([{label:'Square',correct:true},{label:'Rectangle',correct:false},{label:'Triangle',correct:false},{label:'Circle',correct:false}]), [`A rectangle has 4 sides too, but not all equal.`,`This shape looks the same on every side.`,`A square has 4 equal sides!`], `A square has 4 sides that are all the same length; a rectangle's sides are not all equal.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-emoji">🧊</div><div class="flash-caption">This is a 3D shape called a cube. How many flat faces does it have?</div>`, shuffle([{label:'6',correct:true},{label:'4',correct:false},{label:'8',correct:false},{label:'12',correct:false}]), [`Think of a dice — count each flat side.`,`Top, bottom, and 4 sides around.`,`A cube has 6 faces, like a die!`], `A cube (like a die) has 6 flat faces — this is 1st grade 3D shape knowledge!`)
+    ],
+    patterns: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">What comes next? 🔵🔴🔵🔴🔵___</div>`, shuffle([{label:'🔴',correct:true},{label:'🔵',correct:false},{label:'🟡',correct:false},{label:'🟢',correct:false}]), [`Look at the pattern: blue, red, blue, red...`,`It repeats every 2 shapes.`,`Blue, red, blue, red, blue, RED comes next!`], `The pattern is AB AB AB — blue, red repeating. Next is red.`),
+      mkCard('Tier 2', `<div class="flash-caption">What comes next? 🔺🔺🔵🔺🔺🔵🔺🔺___</div>`, shuffle([{label:'🔵',correct:true},{label:'🔺',correct:false},{label:'🟡',correct:false},{label:'🟢',correct:false}]), [`This pattern has 2 triangles then 1 circle.`,`Count the group: triangle, triangle, circle — repeat!`,`After two triangles comes the circle!`], `This is an AAB pattern: two triangles, one circle, repeating.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Growing pattern: 2, 4, 6, 8, ___ What comes next?</div>`, numOptions(10), [`Each number is 2 more than the last.`,`8 + 2 = ?`,`2,4,6,8,10 — we're skip counting by 2!`], `This is a growing/number pattern — skip counting by 2s: 2,4,6,8,10.`)
+    ],
+    skipCount2: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Skip count by 2s: 2, 4, 6, ___</div>`, numOptions(8), [`Add 2 each time.`,`6 + 2 = ?`,`2,4,6,8 — skip counting by 2!`], `Skip counting by 2 means adding 2 each time: 2,4,6,8.`),
+      mkCard('Tier 2', `<div class="flash-caption">Skip count by 2s: 10, 12, 14, ___</div>`, numOptions(16), [`Keep adding 2.`,`14 + 2 = ?`,`10,12,14,16!`], `Even when the numbers get bigger, we still just add 2 each time.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Is 15 a number you'd land on skip counting by 2s starting at 0?</div>`, shuffle([{label:"No, it's odd",correct:true},{label:'Yes',correct:false}]), [`Skip counting by 2 from 0 gives even numbers.`,`0,2,4,6,8,10,12,14,16 — is 15 in that list?`,`15 is odd, so it's not in the even skip-count pattern!`], `Skip counting by 2s from 0 only lands on even numbers (0,2,4...). 15 is odd, so we skip right over it.`)
+    ],
+    placeValue: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">In the number 14, how many TENS are there?</div>`, shuffle([{label:'1',correct:true},{label:'4',correct:false},{label:'14',correct:false},{label:'0',correct:false}]), [`14 = 1 ten and 4 ones.`,`The first digit tells you the tens.`,`14 has 1 ten!`], `14 means 1 ten and 4 ones — the '1' in 14 stands for one group of ten.`),
+      mkCard('Tier 2', `<div class="flash-caption">In the number 27, how many ONES are there?</div>`, shuffle([{label:'7',correct:true},{label:'2',correct:false},{label:'27',correct:false},{label:'20',correct:false}]), [`27 = 2 tens and 7 ones.`,`The last digit tells you the ones.`,`27 has 7 ones!`], `27 means 2 tens and 7 ones — the '7' stands for 7 single ones.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">3 tens and 5 ones makes what number?</div>`, shuffle([{label:'35',correct:true},{label:'53',correct:false},{label:'8',correct:false},{label:'305',correct:false}]), [`3 tens = 30. Add 5 ones.`,`30 + 5 = ?`,`3 tens and 5 ones = 35!`], `3 tens (30) plus 5 ones (5) equals 35 — this is 1st grade place-value thinking!`)
+    ],
+    addTo20: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:26px;">8 + 4 = ?</div>`, numOptions(12), [`Count on from 8: 9, 10, 11, 12.`,`Make a 10 first: 8+2=10, then add 2 more.`,`8 + 4 = 12!`], `Make a ten: 8+2=10, then +2 more = 12.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:26px;">13 + 5 = ?</div>`, numOptions(18), [`13 is 1 ten and 3 ones. Add 5 to the ones.`,`3 + 5 = 8, so 13+5 = 1 ten and 8 ones.`,`13 + 5 = 18!`], `Break 13 into 10+3, then add 5 to the 3: 3+5=8, so 10+8=18.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:24px;">9 + 9 = ?</div>`, numOptions(18), [`Think of 9 as almost 10.`,`10 + 9 = 19, but we used one extra, so subtract 1.`,`9 + 9 = 18!`], `Trick: 9+9 is like 10+9 (=19) minus the extra 1 we added = 18. Doubles are a great strategy!`)
+    ],
+    subTo20: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:26px;">15 − 3 = ?</div>`, numOptions(12), [`Count back from 15: 14, 13, 12.`,`15 is 1 ten and 5 ones — take 3 from the ones.`,`15 - 3 = 12!`], `15-3=12. Taking away from the ones place is quick when there's no regrouping needed.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:26px;">18 − 9 = ?</div>`, numOptions(9), [`Think: 9 + ? = 18.`,`Or count back 9 from 18.`,`18 - 9 = 9!`], `18-9=9. Since 9+9=18, this is also a doubles fact in reverse!`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:24px;">14 − 6 = ?</div>`, numOptions(8), [`14 doesn't have enough ones to take 6 easily — break it apart.`,`14-4=10, then 10-2=8 (since 6=4+2).`,`14 - 6 = 8!`], `Trick: 14-6 → first take away 4 to get to 10 (14-4=10), then take away the remaining 2: 10-2=8.`)
+    ],
+    timeHour: ()=>[
+      mkCard('Tier 1', `<div class="flash-emoji">🕐</div><div class="flash-caption">The short hand is on the 1, long hand on 12. What time is it?</div>`, shuffle([{label:'1:00',correct:true},{label:'12:00',correct:false},{label:'1:30',correct:false},{label:'2:00',correct:false}]), [`The short hand shows the hour.`,`The long hand on 12 means it's exactly on the hour.`,`Short hand on 1, long hand on 12 = 1:00!`], `When the long hand points to 12, it's exactly that hour — short hand on 1 means 1:00.`),
+      mkCard('Tier 2', `<div class="flash-emoji">🕕</div><div class="flash-caption">The short hand is on 6, long hand on 12. What time is it?</div>`, shuffle([{label:'6:00',correct:true},{label:'12:06',correct:false},{label:'6:30',correct:false},{label:'5:00',correct:false}]), [`Short hand = hour, long hand on 12 = 0 minutes.`,`6 o'clock exactly.`,`It's 6:00!`], `Short hand on 6, long hand on 12 = 6:00.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-emoji">🕜</div><div class="flash-caption">Long hand on 6 means half past the hour. Short hand between 1 and 2. What time is it?</div>`, shuffle([{label:'1:30',correct:true},{label:'6:30',correct:false},{label:'1:00',correct:false},{label:'2:00',correct:false}]), [`Long hand on 6 = 30 minutes, or 'half past.'`,`Short hand between 1 and 2 means it's after 1 but not yet 2.`,`That's 1:30 — half past one!`], `When the long hand is on the 6, it means 30 minutes past the hour — this is a 1st grade time skill!`)
+    ],
+    measurement: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which is LONGER — a pencil or a school bus?</div>`, shuffle([{label:'School bus',correct:true},{label:'Pencil',correct:false}]), [`Think about which one you could fit more of end to end.`,`A school bus is much bigger than something you hold.`,`A school bus is longer!`], `A school bus is much longer than a pencil.`),
+      mkCard('Tier 2', `<div class="flash-caption">If a crayon is about 3 paperclips long, and a marker is about 5 paperclips long, which is longer?</div>`, shuffle([{label:'Marker',correct:true},{label:'Crayon',correct:false}]), [`Compare the numbers: 3 vs 5.`,`5 is more than 3.`,`The marker (5 paperclips) is longer!`], `We can measure with everyday objects like paperclips — 5 is more than 3, so the marker is longer.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">A toy car is 6 inches long. A toy truck is 4 inches longer than the car. How long is the truck?</div>`, numOptions(10), [`4 inches longer means we add 4 to the car's length.`,`6 + 4 = ?`,`6 + 4 = 10 inches!`], `The truck is 6+4=10 inches long — this combines measurement with addition, a 1st grade challenge!`)
+    ],
+    money: ()=>[
+      mkCard('Tier 1', `<div class="flash-emoji">🪙</div><div class="flash-caption">A penny is worth how much?</div>`, shuffle([{label:'1 cent',correct:true},{label:'5 cents',correct:false},{label:'10 cents',correct:false},{label:'25 cents',correct:false}]), [`Penny is the smallest coin value.`,`Think 'one' - like 'one cent.'`,`A penny = 1 cent!`], `A penny is worth 1 cent — the smallest US coin value.`),
+      mkCard('Tier 2', `<div class="flash-caption">If you have 2 nickels, how many cents do you have? (1 nickel = 5 cents)</div>`, numOptions(10), [`5 + 5 = ?`,`Skip count by 5s: 5, 10.`,`2 nickels = 10 cents!`], `2 nickels: 5+5=10 cents. Skip counting by 5s helps count nickels fast!`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">You have 1 dime and 3 pennies. How many cents total? (dime=10¢, penny=1¢)</div>`, numOptions(13), [`Start with the dime: 10 cents.`,`Add the pennies one at a time: 10,11,12,13.`,`1 dime + 3 pennies = 13 cents!`], `10 (dime) + 1+1+1 (pennies) = 13 cents. Counting mixed coins is a fun 1st grade money skill!`)
+    ],
+    skipCount5_10: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Skip count by 5s: 5, 10, 15, ___</div>`, numOptions(20), [`Add 5 each time.`,`15 + 5 = ?`,`5,10,15,20!`], `Skip counting by 5s: add 5 each time — 5,10,15,20.`),
+      mkCard('Tier 2', `<div class="flash-caption">Skip count by 10s: 10, 20, 30, ___</div>`, numOptions(40), [`Add 10 each time.`,`30 + 10 = ?`,`10,20,30,40!`], `Skip counting by 10s: just add a ten each time — 10,20,30,40.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which counting pattern would you use to count a big pile of 50 pennies fastest?</div>`, shuffle([{label:'Count by 10s',correct:true},{label:'Count by 1s',correct:false}]), [`Which takes fewer counting steps?`,`10,20,30,40,50 is only 5 steps!`,`Counting by 10s is much faster for big piles!`], `Counting by 10s (10,20,30,40,50) takes far fewer steps than counting by 1s all the way to 50.`)
+    ],
+    mixedReview: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:26px;">9 + 6 = ?</div>`, numOptions(15), [`Make a 10: 9+1=10, then add the leftover 5.`,`10 + 5 = ?`,`9 + 6 = 15!`], `9+6: make a ten first (9+1=10), then add the remaining 5 → 15.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:26px;">17 − 8 = ?</div>`, numOptions(9), [`Think: 8 + ? = 17.`,`Or break 17 into 10+7, subtract from there.`,`17 - 8 = 9!`], `17-8=9. Try thinking of the related addition fact: 8+9=17.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">2 dimes and 1 nickel = how many cents?</div>`, numOptions(25), [`2 dimes = 20 cents.`,`Add the nickel: 20+5.`,`2 dimes + 1 nickel = 25 cents!`], `20 (two dimes) + 5 (one nickel) = 25 cents — a great mix of skip counting and money skills!`)
+    ]
+  };
+  return (builders[topic] || builders.mixedReview)();
+}
+function mkCard(tier, stageHTML, options, hints, explain){
+  return {tier, stageHTML, options, hints, explain};
+}
+
+/* =========================================================
+   PHONICS POWER-UP (Reading)
+   ========================================================= */
+function readingPhonicsHTML(d){
+  const topic = focusForDay(d).readTopic;
+  return activityHeader(d, `🔤 Phonics Power-Up: ${readTopicLabel(topic)}`) +
+    `<p class="sub">Level up your reading skills!</p>
+    ${engineFrameHTML(readTopicLabel(topic))}
+    </div>`;
+}
+function buildReadingDeck(d){
+  const topic = focusForDay(d).readTopic;
+  const builders = {
+    cvc: ()=>[
+      mkCard('Tier 1', `<div class="flash-emoji">🐱</div><div class="flash-caption">Which word matches the picture?</div>`, shuffle([{label:'cat',correct:true},{label:'cap',correct:false},{label:'cut',correct:false},{label:'cot',correct:false}]), [`Sound it out: /c/ /a/ /t/.`,`It rhymes with 'hat' and 'bat.'`,`c-a-t spells cat!`], `CVC words follow consonant-vowel-consonant: c-a-t = cat.`),
+      mkCard('Tier 2', `<div class="flash-caption">Sound it out: What word is d-o-g?</div>`, shuffle([{label:'dog',correct:true},{label:'dig',correct:false},{label:'dug',correct:false},{label:'dag',correct:false}]), [`Blend each sound: /d/ /o/ /g/.`,`Say it fast: d...o...g.`,`d-o-g = dog!`], `Blending sounds together smoothly (d-o-g) makes the word 'dog.'`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which word does NOT rhyme with 'hop'? mop, top, cat, pop</div>`, shuffle([{label:'cat',correct:true},{label:'mop',correct:false},{label:'top',correct:false},{label:'pop',correct:false}]), [`Rhyming words end with the same sound.`,`Hop, mop, top, pop all end in -op.`,`Cat ends differently — it doesn't rhyme!`], `Mop, top, pop all end in -op like hop. Cat ends in -at, so it's the one that doesn't rhyme.`)
+    ],
+    rhyme: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word rhymes with 'cat'?</div>`, shuffle([{label:'hat',correct:true},{label:'dog',correct:false},{label:'cup',correct:false},{label:'sun',correct:false}]), [`Rhyming words end the same way.`,`Cat ends in -at. Which word also ends in -at?`,`Hat rhymes with cat!`], `Hat and cat both end in the -at sound.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which two words rhyme? bug, sun, rug, hop</div>`, shuffle([{label:'bug & rug',correct:true},{label:'sun & hop',correct:false},{label:'bug & sun',correct:false},{label:'rug & hop',correct:false}]), [`Listen for the ending sound of each word.`,`Bug and rug both end in -ug.`,`Bug and rug rhyme!`], `Bug and rug share the -ug ending sound.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Make up a rhyme: what could rhyme with 'star' that isn't 'car'?</div>`, shuffle([{label:'far',correct:true},{label:'stop',correct:false},{label:'run',correct:false},{label:'big',correct:false}]), [`Think of words ending in -ar.`,`Far, jar, and star all share that ending.`,`'Far' rhymes with 'star'!`], `Words like far, jar, and bar all rhyme with star because they share the -ar ending.`)
+    ],
+    blendBL_CL_FL: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word starts with the 'bl' blend?</div>`, shuffle([{label:'blue',correct:true},{label:'red',correct:false},{label:'green',correct:false},{label:'sun',correct:false}]), [`Listen for /bl/ at the start.`,`Blue starts with b and l blended together.`,`Blue starts with 'bl'!`], `In 'bl' blends, you hear both the /b/ and /l/ sounds quickly together, like in 'blue.'`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has the 'cl' blend? clap, cat, top</div>`, shuffle([{label:'clap',correct:true},{label:'cat',correct:false},{label:'top',correct:false}]), [`Listen for /cl/ at the start.`,`Clap starts with c and l blended.`,`Clap has the 'cl' blend!`], `Clap starts with the 'cl' blend — you hear /c/ and /l/ together.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Fill in the blend: F__ag (flag) — what letters are missing?</div>`, shuffle([{label:'l',correct:true},{label:'r',correct:false},{label:'w',correct:false},{label:'s',correct:false}]), [`Think of words starting with 'fl'.`,`Fl-ag = flag!`,`The missing letter is 'l' to make 'fl'!`], `F + L + AG = FLAG. The 'fl' blend combines /f/ and /l/ sounds.`)
+    ],
+    blendST_TR_SP: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word starts with 'st'?</div>`, shuffle([{label:'stop',correct:true},{label:'top',correct:false},{label:'hop',correct:false},{label:'mop',correct:false}]), [`Listen for /st/ at the start.`,`Stop starts with s and t blended.`,`Stop has the 'st' blend!`], `Stop starts with 'st' — you hear both /s/ and /t/.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has the 'tr' blend? tree, tea, ten</div>`, shuffle([{label:'tree',correct:true},{label:'tea',correct:false},{label:'ten',correct:false}]), [`Listen for /tr/ at the start.`,`Tree starts with t and r blended.`,`Tree has the 'tr' blend!`], `Tree starts with 'tr' — you hear /t/ and /r/ blended together.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which word has the 'sp' blend AND rhymes with 'hot'? spot, spin, step</div>`, shuffle([{label:'spot',correct:true},{label:'spin',correct:false},{label:'step',correct:false}]), [`First find words with 'sp', then check which rhymes with 'hot.'`,`Spot ends in -ot like hot.`,`Spot has the 'sp' blend and rhymes with hot!`], `Spot starts with the 'sp' blend and ends in -ot, matching the rhyme of 'hot.' This combines two skills at once!`)
+    ],
+    digraphSH_CH: ()=>[
+      mkCard('Tier 1', `<div class="flash-emoji">🐑</div><div class="flash-caption">This animal says the 'sh' sound. Which word matches?</div>`, shuffle([{label:'ship',correct:true},{label:'sip',correct:false},{label:'skip',correct:false}]), [`'Sh' makes one new sound, like shushing someone.`,`Ship starts with 'sh.'`,`Ship has the 'sh' digraph!`], `'Sh' is a digraph — two letters making ONE new sound, like in 'ship.'`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word starts with the 'ch' digraph?</div>`, shuffle([{label:'chip',correct:true},{label:'cap',correct:false},{label:'kite',correct:false}]), [`'Ch' makes a new sound, like in 'choo-choo train.'`,`Chip starts with 'ch.'`,`Chip has the 'ch' digraph!`], `'Ch' is a digraph too — it makes a totally new sound, not /c/ and /h/ separately.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which word has BOTH sh and ch sounds hidden in it? 'chairs' or 'shell'? Pick the one with 'ch'.</div>`, shuffle([{label:'chairs',correct:true},{label:'shell',correct:false}]), [`Say each word slowly and listen for /ch/ vs /sh/.`,`Chairs starts with the 'ch' sound.`,`Chairs has the 'ch' digraph!`], `Chairs starts with /ch/ while shell starts with /sh/ — these are easy to mix up, so listening carefully matters!`)
+    ],
+    cvce: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Add a silent E: 'cap' becomes 'cape.' What does the vowel sound do?</div>`, shuffle([{label:'Says its name (long A)',correct:true},{label:'Stays short',correct:false}]), [`The silent E is magic — it changes the vowel sound.`,`Cap has a short a, cape has a long A that says its name.`,`Silent E makes the vowel say its name!`], `Silent E is 'magic e' — it makes the vowel before it say its own name (long sound), like cap → cape.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has a silent E? 'hop' or 'hope'?</div>`, shuffle([{label:'hope',correct:true},{label:'hop',correct:false}]), [`Look for the E at the very end.`,`Hope ends in a silent e.`,`Hope has the silent e, making the o say its name!`], `Hope has a silent e at the end, which makes the o say its long sound: 'hope' not 'hopp.'`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Change 'kit' to a magic-e word. What new word do you get?</div>`, shuffle([{label:'kite',correct:true},{label:'kits',correct:false},{label:'kid',correct:false},{label:'kitten',correct:false}]), [`Add a silent e to the end of kit.`,`Kit + e = ?`,`Kit + silent e = kite!`], `Adding silent e to 'kit' makes 'kite' — the i changes from short to long sound.`)
+    ],
+    comprehension1: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Max the dog ran to the park. He saw a red ball and grabbed it with his mouth." <br><br>What did Max grab?</div>`, shuffle([{label:'A red ball',correct:true},{label:'A stick',correct:false},{label:'A bone',correct:false},{label:'A shoe',correct:false}]), [`Look back at the story — what does it say Max saw?`,`The story says he saw something red and round.`,`Max grabbed a red ball!`], `Re-reading the sentence shows Max saw and grabbed a red ball.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Max the dog ran to the park. He saw a red ball and grabbed it with his mouth." <br><br>Where did Max run to?</div>`, shuffle([{label:'The park',correct:true},{label:'The store',correct:false},{label:'School',correct:false},{label:'Home',correct:false}]), [`Find the word that tells the place in the story.`,`The very first sentence names the place.`,`Max ran to the park!`], `The first sentence tells us the setting: Max ran to the park.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Max the dog ran to the park. He saw a red ball and grabbed it with his mouth." <br><br>Why do you think Max grabbed the ball? (inference)</div>`, shuffle([{label:'Dogs like to play with balls',correct:true},{label:'The story says exactly why',correct:false}]), [`This isn't stated directly — think about what you know about dogs.`,`Dogs usually like balls because they're fun to play with.`,`Max likely grabbed it because dogs enjoy playing with balls!`], `This is an inference — the story doesn't say WHY directly, but we can use what we know about dogs to make a smart guess. That's a 1st grade comprehension skill!`)
+    ],
+    compoundWords: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">'Sun' + 'flower' makes what compound word?</div>`, shuffle([{label:'sunflower',correct:true},{label:'flowersun',correct:false},{label:'sunny',correct:false}]), [`Just put the two words together in order.`,`Sun + flower = ?`,`Sunflower!`], `A compound word joins two small words to make one new word: sun + flower = sunflower.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which two words make 'butterfly'?</div>`, shuffle([{label:'butter + fly',correct:true},{label:'but + fly',correct:false},{label:'butter + sky',correct:false}]), [`Break the word into two smaller words you know.`,`But-ter-fly... butter and fly!`,`Butter + fly = butterfly!`], `Butterfly breaks into two words you know: butter + fly.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which compound word means a board you write on with chalk?</div>`, shuffle([{label:'chalkboard',correct:true},{label:'blackboard',correct:false},{label:'writingboard',correct:false}]), [`Think of the two small words: chalk + board.`,`This is the most common word for it.`,`Chalkboard = chalk + board!`], `Chalkboard combines 'chalk' and 'board' — the tool and the surface. (Blackboard is also acceptable, but chalkboard is most precise!)`)
+    ],
+    digraphWH_TH: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which question word starts with 'wh'?</div>`, shuffle([{label:'what',correct:true},{label:'cat',correct:false},{label:'run',correct:false}]), [`Question words like what, when, where all start with 'wh.'`,`Sound it out: /wh/ /a/ /t/.`,`What starts with 'wh'!`], `'Wh' words are often question words: what, when, where, why.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word starts with the 'th' digraph?</div>`, shuffle([{label:'this',correct:true},{label:'tip',correct:false},{label:'sit',correct:false}]), [`'Th' makes a new sound with your tongue between your teeth.`,`This starts with 'th.'`,`This has the 'th' digraph!`], `'Th' is made with your tongue lightly between your teeth, like in 'this' and 'that.'`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which word pair both start with digraphs but sound different? 'that' and 'chat' — true or false?</div>`, shuffle([{label:'True',correct:true},{label:'False',correct:false}]), [`Say both words out loud slowly.`,`Th makes a soft sound, ch makes a different sound.`,`Yes — 'th' and 'ch' are different digraphs with different sounds!`], `Both 'th' and 'ch' are digraphs (two letters, one new sound), but they sound different from each other.`)
+    ],
+    blendGR_PL_SW: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word starts with 'gr'?</div>`, shuffle([{label:'green',correct:true},{label:'red',correct:false},{label:'blue',correct:false}]), [`Listen for /gr/ at the start.`,`Green starts with g and r blended.`,`Green has the 'gr' blend!`], `Green starts with the 'gr' blend — /g/ and /r/ said quickly together.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has the 'pl' blend?</div>`, shuffle([{label:'plane',correct:true},{label:'pan',correct:false},{label:'pin',correct:false}]), [`Listen for /pl/ at the start.`,`Plane starts with p and l blended.`,`Plane has the 'pl' blend!`], `Plane starts with the 'pl' blend.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which word has the 'sw' blend AND means moving through water?</div>`, shuffle([{label:'swim',correct:true},{label:'swing',correct:false},{label:'sweet',correct:false}]), [`All three start with 'sw' — think about which means moving in water.`,`Swim means to move through water.`,`Swim has 'sw' and means moving through water!`], `All three words have the 'sw' blend, but 'swim' specifically means moving through water.`)
+    ],
+    longVowelTeams: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">'ai' in 'rain' makes what sound?</div>`, shuffle([{label:'Long A',correct:true},{label:'Short A',correct:false},{label:'Long E',correct:false}]), [`Two vowels together often make one long sound.`,`Rain sounds like 'ray-n' — that's a long A.`,`'ai' makes the long A sound!`], `When two vowels are together like 'ai', often the first vowel says its name (long A) and the second is silent.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has the long E sound from 'ee'?</div>`, shuffle([{label:'tree',correct:true},{label:'ten',correct:false},{label:'tin',correct:false}]), [`Look for the double e.`,`Tree has 'ee' making a long E sound.`,`Tree has the long E 'ee' sound!`], `'Ee' in 'tree' makes the long E sound, like saying the letter E.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which vowel team makes the same sound in both 'boat' and 'coach'?</div>`, shuffle([{label:'oa',correct:true},{label:'ai',correct:false},{label:'ee',correct:false}]), [`Look for the matching two letters in both words.`,`B-OA-t and c-OA-ch both share this team.`,`'oa' is the vowel team in both, making the long O sound!`], `'Oa' appears in both boat and coach, making the long O sound — a 1st grade vowel team skill!`)
+    ],
+    comprehension2: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Lily planted a seed. She watered it every day. Soon a tiny green sprout popped up!" <br><br>What did Lily plant?</div>`, shuffle([{label:'A seed',correct:true},{label:'A flower',correct:false},{label:'A tree',correct:false}]), [`Look at the very first sentence.`,`The story tells us exactly what she planted.`,`Lily planted a seed!`], `The first sentence directly states Lily planted a seed.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Lily planted a seed. She watered it every day. Soon a tiny green sprout popped up!" <br><br>What happened because Lily watered it every day?</div>`, shuffle([{label:'A sprout grew',correct:true},{label:'Nothing happened',correct:false},{label:'It turned red',correct:false}]), [`Think about cause and effect — what happened after the watering?`,`The last sentence tells the result.`,`A green sprout popped up!`], `This is cause and effect: because she watered it daily, a sprout grew. Look for the word 'soon' — it signals what happens next.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Lily planted a seed. She watered it every day. Soon a tiny green sprout popped up!" <br><br>What lesson does this story teach about caring for plants?</div>`, shuffle([{label:'Consistent care helps things grow',correct:true},{label:'Plants grow without any care',correct:false}]), [`Think about what Lily DID every day and what happened as a result.`,`Her daily watering (consistent care) led to growth.`,`The lesson: taking care of something regularly helps it grow!`], `This story teaches that consistent, daily care (like watering) helps living things grow — a comprehension 'big idea' skill for 1st grade.`)
+    ],
+    contractions: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">'do not' becomes what contraction?</div>`, shuffle([{label:"don't",correct:true},{label:"dont's",correct:false},{label:"do'nt",correct:false}]), [`We combine the words and add an apostrophe where letters are missing.`,`Do + not → the 'o' in not is replaced by an apostrophe.`,`Do not = don't!`], `Contractions combine two words and use an apostrophe to show missing letters: do+not → don't.`),
+      mkCard('Tier 2', `<div class="flash-caption">'I am' becomes what contraction?</div>`, shuffle([{label:"I'm",correct:true},{label:"Im'",correct:false},{label:"I'am",correct:false}]), [`Combine I and am, dropping the 'a.'`,`The apostrophe replaces the missing letter.`,`I am = I'm!`], `I+am → I'm. The apostrophe takes the place of the missing 'a.'`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which two words make the contraction 'they're'?</div>`, shuffle([{label:'they + are',correct:true},{label:'they + were',correct:false},{label:'the + are',correct:false}]), [`Think about which letters are missing and replaced by the apostrophe.`,`They + are, dropping the 'a.'`,`They are = they're!`], `They+are → they're, with the apostrophe replacing the missing 'a.' This is a trickier 1st grade contraction!`)
+    ],
+    mixedReview: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word rhymes with 'frog'?</div>`, shuffle([{label:'dog',correct:true},{label:'cat',correct:false},{label:'sun',correct:false}]), [`Listen for the -og ending.`,`Dog ends the same way as frog.`,`Dog rhymes with frog!`], `Dog and frog both end in the -og sound.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has a silent e?</div>`, shuffle([{label:'bike',correct:true},{label:'bit',correct:false},{label:'big',correct:false}]), [`Look for the e at the very end.`,`Bike ends in a silent e.`,`Bike has the silent e, making the i say its name!`], `Bike ends in silent e, making the 'i' say its long sound.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which is the contraction for 'it is'?</div>`, shuffle([{label:"it's",correct:true},{label:'its',correct:false},{label:"i'ts",correct:false}]), [`Combine it + is, dropping the i.`,`The apostrophe replaces the missing letter.`,`It is = it's!`], `It+is → it's, with the apostrophe replacing the missing 'i.' (Careful: 'its' without an apostrophe means something belongs to it!)`)
+    ]
+  };
+  return (builders[topic] || builders.mixedReview)();
+}
+
+/* =========================================================
+   SIGHT WORD SPRINT
+   ========================================================= */
+function sightHTML(d){
+  return activityHeader(d, `⚡ Sight Word Sprint`) +
+    `<p class="sub">Speed-read today's sight words!</p>
+    ${engineFrameHTML('Sight Words')}
+    </div>`;
+}
+function buildSightDeck(d){
+  const words = focusForDay(d).sightSet;
+  return words.map((w,idx)=>{
+    const others = pickDistinct(['the','I','see','go','can','like','look','we','you','my','have','said','was','they','come','some','play','little','what','when','where','who','make','take','ride','time','there','their','were','about','after','again','could','because','before','friend','other','every','never','always','through','school','which','write','right','does','goes','been','into','once','upon','done','first','second','third','next','last'], w, 3);
+    return {
+      tier: idx<2 ? 'Warm-Up' : 'Speed Round',
+      stageHTML: `<div class="flash-big-letter" style="font-size:70px;">${w}</div><div class="flash-caption">Read this word out loud, then tap it!</div>`,
+      options: shuffle([{label:w,correct:true}, ...others.map(o=>({label:o,correct:false}))]),
+      hints: [`Sound it out slowly, letter by letter.`, `This is a word you'll see A LOT in books.`, `The word is "${w}."`],
+      explain: `"${w}" is a sight word — practicing it helps you read faster without sounding out every letter.`
+    };
+  });
+}
+
+/* =========================================================
+   NUMBER NINJA (skip counting / place value drills, day-varied)
+   ========================================================= */
+function ninjaHTML(d){
+  return activityHeader(d, `🎯 Number Ninja`) +
+    `<p class="sub">Sharpen your number sense with a quick drill!</p>
+    ${engineFrameHTML('Number Ninja')}
+    </div>`;
+}
+function buildNinjaDeck(d){
+  const base = d + 4;
+  return [
+    mkCard('Warm-Up', `<div class="flash-emoji" style="font-size:60px;">🌱</div><div class="flash-caption">What number is 1 MORE than ${base}?</div>`, numOptions(base+1), [`Count up one from ${base}.`,`${base}, then...?`,`1 more than ${base} is ${base+1}!`], `Adding 1 more means counting to the very next number after ${base}.`),
+    mkCard('Level Up', `<div class="flash-emoji" style="font-size:60px;">🚀</div><div class="flash-caption">What number is 10 MORE than ${base}?</div>`, numOptions(base+10), [`If you know ${base}, just change the tens digit.`,`${base} + 10 = ?`,`10 more than ${base} is ${base+10}!`], `Adding 10 just increases the tens place by one — a quick mental math trick!`),
+    mkCard('Ninja Challenge', `<div class="flash-emoji" style="font-size:60px;">🏆</div><div class="flash-caption">What number is 1 LESS than ${base+10}?</div>`, numOptions(base+9), [`Count backward one from ${base+10}.`,`${base+10}, then back one...?`,`1 less than ${base+10} is ${base+9}!`], `Going 1 less means stepping back one number — practicing both directions builds strong number sense.`)
+  ];
+}
+
+/* =========================================================
+   WRITING GYM (traces 3-5 words per day, each requiring a
+   high-accuracy trace before advancing to the next word)
+   ========================================================= */
+var writeState = {};
+function writeHTML(d){
+  const words = focusForDay(d).sightSet;
+  return activityHeader(d, `✏️ Writing Gym`) +
+  `<p class="sub">Trace each word carefully — aim for 95-100% accuracy to earn a gold star on every word!</p>
+  <div class="stage">
+    <div class="pill" id="write-progress">Word 1 of ${words.length}</div>
+    <div class="flash-caption" id="write-word-label" style="margin-top:8px;"></div>
+    <canvas class="trace-canvas" id="traceCanvas" width="360" height="260"></canvas>
+    <div class="trace-controls">
+      <button class="small-btn" onclick="clearTrace()">🧽 Clear</button>
+      <button class="big-btn green" style="width:auto;" onclick="checkTrace(${d})">✅ Check My Tracing!</button>
+    </div>
+    <div id="write-feedback" style="margin-top:14px;"></div>
+  </div>
+  </div>`;
+}
+function initTraceCanvas(d){
+  const canvas = document.getElementById('traceCanvas');
+  if(!canvas) return;
+  const ctx2d = canvas.getContext('2d');
+  window._traceCanvas = canvas;
+
+  function currentWord(){ return writeState.words[writeState.idx]; }
+  function fontSizeFor(word){ return word.length > 6 ? 46 : (word.length > 4 ? 60 : 84); }
+  function drawGuide(){
+    const word = currentWord();
+    ctx2d.clearRect(0,0,canvas.width,canvas.height);
+    ctx2d.font = `bold ${fontSizeFor(word)}px "Baloo 2", sans-serif`;
+    ctx2d.fillStyle = '#dbe8ff';
+    ctx2d.textAlign='center';
+    ctx2d.textBaseline='middle';
+    ctx2d.fillText(word, canvas.width/2, canvas.height/2+10);
+  }
+  window._drawTraceGuide = drawGuide;
+  window._fontSizeFor = fontSizeFor;
+
+  ctx2d.strokeStyle = '#1E6FFF';
+  ctx2d.lineWidth = 7;
+  ctx2d.lineCap = 'round';
+  let drawing=false;
+  function pos(e){
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width/rect.width, scaleY = canvas.height/rect.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {x:(clientX-rect.left)*scaleX, y:(clientY-rect.top)*scaleY};
+  }
+  function start(e){ drawing=true; const p=pos(e); ctx2d.beginPath(); ctx2d.moveTo(p.x,p.y); e.preventDefault(); }
+  function move(e){ if(!drawing) return; const p=pos(e); ctx2d.lineTo(p.x,p.y); ctx2d.stroke(); e.preventDefault(); }
+  function end(){ drawing=false; }
+  canvas.addEventListener('mousedown',start); canvas.addEventListener('mousemove',move); window.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false}); canvas.addEventListener('touchmove',move,{passive:false}); canvas.addEventListener('touchend',end);
+  window.clearTrace = function(){ drawGuide(); };
+
+  startWriting(d);
+}
+function startWriting(d){
+  writeState = {day:d, words: focusForDay(d).sightSet, idx:0, attempts:0};
+  loadWriteWord();
+}
+function loadWriteWord(){
+  const w = writeState.words[writeState.idx];
+  const progEl = document.getElementById('write-progress');
+  const labelEl = document.getElementById('write-word-label');
+  const feedEl = document.getElementById('write-feedback');
+  if(progEl) progEl.innerText = `Word ${writeState.idx+1} of ${writeState.words.length}`;
+  if(labelEl) labelEl.innerText = `Trace: "${w}"`;
+  if(feedEl) feedEl.innerHTML = '';
+  writeState.attempts = 0;
+  if(window._drawTraceGuide) window._drawTraceGuide();
+}
+/* Pixel-based accuracy check: renders the guide word to an offscreen
+   canvas, compares it against the child's ink strokes, and scores both
+   how much of the letter shape got covered and how much stray ink there
+   was outside the letters — combined into one accuracy percentage. */
+function computeTraceAccuracy(canvas, word, fontSize){
+  const w = canvas.width, h = canvas.height;
+  const guideCanvas = document.createElement('canvas');
+  guideCanvas.width = w; guideCanvas.height = h;
+  const gctx = guideCanvas.getContext('2d');
+  gctx.font = `bold ${fontSize}px "Baloo 2", sans-serif`;
+  gctx.textAlign='center'; gctx.textBaseline='middle';
+  gctx.fillStyle = '#000';
+  gctx.fillText(word, w/2, h/2+10);
+  const guideData = gctx.getImageData(0,0,w,h).data;
+
+  const uctx = canvas.getContext('2d');
+  const userData = uctx.getImageData(0,0,w,h).data;
+
+  const guidePixels = [];
+  const inkPixels = [];
+  for(let i=0;i<w*h;i++){
+    if(guideData[i*4+3] > 40) guidePixels.push(i);
+    const r = userData[i*4], g = userData[i*4+1], b = userData[i*4+2];
+    if(b > 140 && b > r + 30 && b > g + 10) inkPixels.push(i);
+  }
+  if(guidePixels.length === 0 || inkPixels.length === 0) return {score:0, coverage:0, accuracy:0};
+
+  const R = 7;
+  const guideTol = dilateSet(guidePixels, w, h, R);
+  const inkTol = dilateSet(inkPixels, w, h, R);
+
+  let covered = 0;
+  for(const idx of guidePixels){ if(inkTol.has(idx)) covered++; }
+  const coverage = covered / guidePixels.length;
+
+  let accurate = 0;
+  for(const idx of inkPixels){ if(guideTol.has(idx)) accurate++; }
+  const accuracy = accurate / inkPixels.length;
+
+  const score = Math.round(Math.min(100, (coverage*0.6 + accuracy*0.4) * 100));
+  return {score, coverage:Math.round(coverage*100), accuracy:Math.round(accuracy*100)};
+}
+function dilateSet(pixels, w, h, R){
+  const set = new Set();
+  const R2 = R*R;
+  for(const idx of pixels){
+    const x = idx % w, y = (idx / w) | 0;
+    for(let dy=-R; dy<=R; dy++){
+      const ny = y+dy; if(ny<0||ny>=h) continue;
+      const rowBase = ny*w;
+      for(let dx=-R; dx<=R; dx++){
+        if(dx*dx+dy*dy > R2) continue;
+        const nx = x+dx; if(nx<0||nx>=w) continue;
+        set.add(rowBase+nx);
+      }
+    }
+  }
+  return set;
+}
+function checkTrace(d){
+  const canvas = window._traceCanvas;
+  if(!canvas) return;
+  const word = writeState.words[writeState.idx];
+  const fontSize = window._fontSizeFor ? window._fontSizeFor(word) : 80;
+  const result = computeTraceAccuracy(canvas, word, fontSize);
+  writeState.attempts++;
+  const feedEl = document.getElementById('write-feedback');
+  if(result.score >= 95){
+    feedEl.innerHTML = `<div class="hint-box" style="background:#eafaf0;border-color:#b8f0cf;color:#1d7a4a;">🌟 Amazing! ${result.score}% accuracy — that's a perfect trace!</div>
+    <button class="big-btn green" style="margin-top:10px;width:auto;" onclick="nextWriteWord(${d})">Next Word ➡️</button>`;
+  } else if(result.score >= 90){
+    feedEl.innerHTML = `<div class="hint-box" style="background:#eafaf0;border-color:#b8f0cf;color:#1d7a4a;">🎉 Great job! ${result.score}% accuracy — nice tracing!</div>
+    <button class="big-btn green" style="margin-top:10px;width:auto;" onclick="nextWriteWord(${d})">Next Word ➡️</button>`;
+  } else if(writeState.attempts >= 3){
+    feedEl.innerHTML = `<div class="hint-box">💪 Nice effort — ${result.score}% this time! Let's move on and we'll practice this word again soon.</div>
+    <button class="big-btn green" style="margin-top:10px;width:auto;" onclick="nextWriteWord(${d})">Continue ➡️</button>`;
+  } else {
+    feedEl.innerHTML = `<div class="hint-box">✏️ You got ${result.score}% — so close! Trace slowly, right on top of the pale letters. (Attempt ${writeState.attempts} of 3)</div>
+    <button class="small-btn" style="margin-top:10px;" onclick="clearTrace()">🧽 Clear &amp; Try Again</button>`;
+  }
+}
+function nextWriteWord(d){
+  writeState.idx++;
+  if(writeState.idx >= writeState.words.length){
+    markSectionComplete(d,'write');
+    goto('day',{day:d});
+  } else {
+    loadWriteWord();
+  }
+}
+
+/* =========================================================
+   MEMORY MATCH
+   ========================================================= */
+var memState = {};
+function memoryHTML(d){
+  return activityHeader(d, `🧠 Memory Match`) +
+  `<p class="sub">Flip two cards and find the matching pairs!</p>
+  <div class="stage"><div class="memgrid" id="memgrid"></div><div id="memWin" style="margin-top:14px;"></div></div>
+  </div>`;
+}
+function initMemoryGame(d){
+  const f = focusForDay(d);
+  const symbols = ['🔢','🔤','⚡','🎯','⭐','💰'];
+  let cards = shuffle([...symbols, ...symbols]).map((s,i)=>({id:i, val:s, flipped:false, matched:false}));
+  memState = {cards, first:null, second:null, lock:false, dayNum:d};
+  renderMemGrid();
+}
+function renderMemGrid(){
+  const grid = document.getElementById('memgrid');
+  if(!grid) return;
+  grid.innerHTML = memState.cards.map(c=>`<div class="memcard ${c.flipped||c.matched?'flipped':''} ${c.matched?'matched':''}" onclick="flipMem(${c.id})">${(c.flipped||c.matched) ? c.val : '<span style=\"font-family: Baloo 2, sans-serif; font-weight:800;\">?</span>'}</div>`).join('');
+  if(memState.cards.every(c=>c.matched)){
+    document.getElementById('memWin').innerHTML = `<div class="feedback">🏆 You matched them all!</div><button class="big-btn green" style="margin-top:10px;" onclick="finishMemory(${memState.dayNum})">Continue ➡️</button>`;
+  }
+}
+function flipMem(id){
+  if(memState.lock) return;
+  const c = memState.cards.find(x=>x.id===id);
+  if(c.flipped||c.matched) return;
+  c.flipped = true;
+  if(!memState.first){ memState.first = c; }
+  else if(!memState.second){
+    memState.second = c;
+    memState.lock = true;
+    renderMemGrid();
+    setTimeout(()=>{
+      if(memState.first.val === memState.second.val){ memState.first.matched = true; memState.second.matched = true; }
+      else { memState.first.flipped = false; memState.second.flipped = false; }
+      memState.first = null; memState.second=null; memState.lock=false;
+      renderMemGrid();
+    }, 700);
+    return;
+  }
+  renderMemGrid();
+}
+function finishMemory(d){ markSectionComplete(d,'memory'); goto('day',{day:d}); }
+
+/* =========================================================
+   BOSS QUIZ (mixed review of the day)
+   ========================================================= */
+function quizHTML(d){
+  return activityHeader(d, `🏆 Boss Quiz`) +
+    `<p class="sub">Beat today's boss level with everything you learned!</p>
+    ${engineFrameHTML('Boss Quiz')}
+    </div>`;
+}
+function buildQuizDeck(d){
+  const mathDeck = buildMathDeck(d);
+  const readDeck = buildReadingDeck(d);
+  const sight = focusForDay(d).sightSet[0];
+  const others = pickDistinct(['the','I','see','go','can','like','look','we','you','my'], sight, 3);
+  return [
+    mathDeck[0],
+    readDeck[0],
+    { tier:'Sight Word', stageHTML:`<div class="flash-big-letter" style="font-size:60px;">${sight}</div><div class="flash-caption">Read this sight word!</div>`,
+      options: shuffle([{label:sight,correct:true}, ...others.map(o=>({label:o,correct:false}))]),
+      hints:[`Sound it out.`,`This is today's featured word.`,`It's "${sight}."`], explain:`"${sight}" is today's sight word.` },
+    mathDeck[1],
+    readDeck[1]
+  ];
+}
+
+/* =========================================================
+   STORY TIME (Reading Corner)
+   ========================================================= */
+function storyHTML(dOrNull){
+  const d = dOrNull;
+  const book = bookForDay(d);
+  const dayIdxInBook = book.days.indexOf(d);
+  const stageOptions = ['📖 Picture Walk', '📝 Vocabulary', '⭐ Favorite Moment', '💬 Discussion & Game'];
+  const stageTitle = stageOptions[dayIdxInBook % stageOptions.length];
+  let body = '';
+  if(stageTitle.includes('Picture Walk')){
+    body = `<p>${book.summary}</p><h4>🎨 Try this:</h4><p>${book.activity}</p>`;
+  } else if(stageTitle.includes('Vocabulary')){
+    body = `<h4>New words to learn:</h4><div>${book.vocab.map(v=>`<span class="vocab-chip">${v}</span>`).join('')}</div>
+    <h4 style="margin-top:14px;">Fun Facts</h4><ul class="fun-list">${book.funFacts.map(f=>`<li>${f}</li>`).join('')}</ul>`;
+  } else if(stageTitle.includes('Favorite')){
+    body = `<p><b>Our favorite moment:</b> ${book.moment}</p><h4>💛 Big Idea</h4><p>${book.lesson}</p>`;
+  } else {
+    body = `<h4>Let's talk about it!</h4><ul class="fun-list">${book.discussion.map(q=>`<li>${q}</li>`).join('')}</ul>`;
+  }
+  return activityHeader(d, `📖 Story Time`) +
+  `<div class="book-cover"><div class="emoji">${book.emoji}</div><h3 style="margin:6px 0 2px;">${book.title}</h3><p class="sub" style="margin:0;">by ${book.author}</p></div>
+  <div class="hint-box" style="text-align:left;">
+    🎬 <b>Watch a read-aloud together:</b> <a href="${book.videoUrl}" target="_blank" rel="noopener">${book.videoLabel}</a><br>
+    <span style="font-size:12px;">(Please preview with Joseph — every video is picked from a kid-focused read-aloud channel, but it's always good to watch together!)</span><br><br>
+    📱 <b>Want the real book?</b> Borrow the ebook or audiobook free from your local library using the <b>Libby</b> app (by OverDrive) — just search "${book.title}."
+  </div>
+  <p class="pill" style="margin-top:12px;">${stageTitle}</p>
+  <div style="margin-top:10px;">${body}</div>
+  <button class="big-btn gold" style="margin-top:18px;" onclick="markSectionComplete(${d},'story'); goto('day',{day:${d}});">✅ Finished Story Time!</button>
+  </div>`;
+}
+
+/* =========================================================
+   VIDEO LEARNING (per-day, gated — required to unlock next day,
+   with an interactive recap the child answers after watching)
+   ========================================================= */
+function videoHTML(d){
+  const f = focusForDay(d);
+  const mv = MATH_VIDEOS[f.mathTopic];
+  const rv = READ_VIDEOS[f.readTopic];
+  const notes = getVideoNotes(d);
+  const bothWatched = !!(notes.mathWatched && notes.readWatched);
+  const mcOptions = ['Yes, easily!','Yes, with a little help','I need more practice'];
+  return activityHeader(d, `🎬 Video Learning`) +
+  `<p class="sub">Watch both videos with a grown-up, then answer the questions below!</p>
+  <div class="stage" style="text-align:left;">
+    <h3 style="margin-top:0;">🔢 Math Video: ${mathTopicLabel(f.mathTopic)}</h3>
+    <p>▶️ <a href="${mv.url}" target="_blank" rel="noopener"><b>${mv.title}</b></a> <span class="pill">${mv.channel}</span></p>
+    <label style="display:flex;align-items:center;gap:8px;margin:10px 0;font-weight:700;">
+      <input type="checkbox" ${notes.mathWatched?'checked':''} onchange="toggleWatched(${d},'math',this.checked)" style="width:20px;height:20px;"> I watched the math video!
+    </label>
+
+    <h3 style="margin-top:20px;">🔤 Reading Video: ${readTopicLabel(f.readTopic)}</h3>
+    <p>▶️ <a href="${rv.url}" target="_blank" rel="noopener"><b>${rv.title}</b></a> <span class="pill">${rv.channel}</span></p>
+    <label style="display:flex;align-items:center;gap:8px;margin:10px 0;font-weight:700;">
+      <input type="checkbox" ${notes.readWatched?'checked':''} onchange="toggleWatched(${d},'read',this.checked)" style="width:20px;height:20px;"> I watched the reading video!
+    </label>
+
+    <h3 style="margin-top:20px;">💬 Let's Talk About It!</h3>
+    <p class="sub">Answer together — tap a choice or type Joseph's own words. Everything saves automatically.</p>
+
+    <div style="margin-top:12px;">
+      <p style="font-weight:700;">Can you show me an example?</p>
+      <div class="opt-grid" style="grid-template-columns:1fr 1fr;">
+        ${mcOptions.map(opt=>`<button class="opt-btn ${notes.q1===opt?'correct':''}" style="font-size:13px;padding:12px 6px;" onclick="saveVideoAnswer(${d},'q1','${opt.replace(/'/g,"\\'")}')">${opt}</button>`).join('')}
+      </div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <p style="font-weight:700;">What was the trick they used?</p>
+      <textarea rows="2" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:14px;" placeholder="Type what Joseph remembers..." onchange="saveVideoAnswer(${d},'q2',this.value)">${notes.q2||''}</textarea>
+    </div>
+
+    <div style="margin-top:16px;">
+      <p style="font-weight:700;">Can you explain it back to me?</p>
+      <textarea rows="3" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:14px;" placeholder="Type Joseph's explanation here..." onchange="saveVideoAnswer(${d},'q3',this.value)">${notes.q3||''}</textarea>
+    </div>
+
+    <button class="big-btn blue" style="margin-top:18px;" onclick="finishVideoActivity(${d})" ${bothWatched?'':'disabled'}>✅ Finished Video Learning!</button>
+    ${bothWatched ? '' : '<p class="sub" style="margin-top:8px;">Check off both videos above to unlock the finish button.</p>'}
+  </div>
+  </div>`;
+}
+function toggleWatched(d, which, checked){
+  const notes = getVideoNotes(d);
+  if(which==='math') notes.mathWatched = checked; else notes.readWatched = checked;
+  save();
+  goto('video', {day:d});
+}
+function saveVideoAnswer(d, key, value){
+  const notes = getVideoNotes(d);
+  notes[key] = value;
+  save();
+  if(key==='q1'){ goto('video', {day:d}); }
+}
+function finishVideoActivity(d){
+  markSectionComplete(d, 'video');
+  goto('day', {day:d});
+}
+
+/* =========================================================
+   REWARDS
+   ========================================================= */
+function rewardsHTML(){
+  const earned = state.stickers;
+  let wall = '';
+  for(let i=0;i<Math.max(earned.length, 12); i++){
+    if(i < earned.length) wall += `<div class="sticker">${earned[i]}</div>`;
+    else wall += `<div class="sticker locked">🔒</div>`;
+  }
+  const completedDays = Object.values(state.days).filter(d=>d.complete).length;
+  return `<div class="card">
+    <h2>🏆 My Rewards</h2>
+    <p class="sub">${state.coins} coins earned · ${earned.length} badges collected · ${completedDays}/14 days complete</p>
+    <div class="sticker-wall">${wall}</div>
+  </div>
+  <div class="card">
+    <h2>🎓 Certificate</h2>
+    <p class="sub">${completedDays >= 14 ? "You beat the whole academy! Print your certificate below." : "Finish all 14 days to unlock your printable certificate!"}</p>
+    <div style="border:6px double #1E6FFF;border-radius:18px;padding:24px;text-align:center;background:#f7faff;">
+      <div style="font-size:40px;">🏆</div>
+      <h2 style="margin:8px 0 0;">Certificate of Achievement</h2>
+      <p style="margin:6px 0;">This certifies that</p>
+      <h2 style="color:var(--red-deep);margin:0;">Joseph Hodges VI</h2>
+      <p style="margin:10px 0 0;">completed the Turbo Quest Academy<br>Kindergarten Review &amp; 1st Grade Readiness Program</p>
+    </div>
+    <button class="big-btn blue" style="margin-top:14px;" onclick="window.print()" ${completedDays>=14?'':'disabled'}>🖨️ Print Certificate</button>
+  </div>`;
+}
+
+/* =========================================================
+   PARENT DASHBOARD
+   ========================================================= */
+function parentHTML(){
+  const completedDays = Object.values(state.days).filter(d=>d.complete).length;
+  let totalActs=0, doneActs=0;
+  for(let d=1;d<=14;d++){ const s=dayState(d); ALL_SECTIONS.forEach(k=>{totalActs++; if(s[k]) doneActs++;}); }
+  const subjects = [
+    {label:'Math Mission', pct: pctFor('math'), color:'#1E6FFF'},
+    {label:'Phonics & Reading', pct: pctFor('reading'), color:'#EE3B32'},
+    {label:'Sight Words', pct: pctFor('sight'), color:'#FFC72C'},
+    {label:'Number Sense', pct: pctFor('ninja'), color:'#22B24C'},
+    {label:'Writing', pct: pctFor('write'), color:'#7B4FE0'},
+    {label:'Comprehension', pct: pctFor('story'), color:'#00D4FF'},
+    {label:'Video Learning', pct: pctFor('video'), color:'#FF6B00'}
+  ];
+  function pctFor(key){ let done=0, tot=0; for(let d=1; d<=14; d++){ tot++; if(dayState(d)[key]) done++; } return Math.round((done/tot)*100); }
+  return `<div class="card">
+    <h2>👨 Parent Dashboard</h2>
+    <p class="sub">${completedDays}/14 days complete · ${doneActs}/${totalActs} activities complete · ${state.coins} total coins</p>
+    <div class="progressbar"><div style="width:${Math.round((doneActs/totalActs)*100)}%"></div></div>
+    <h3 style="margin-top:20px;">Mastery by Subject</h3>
+    ${subjects.map(s=>`<div class="bar-row"><div class="lbl"><span>${s.label}</span><span>${s.pct}%</span></div><div class="bar-track"><div class="bar-fill" style="width:${s.pct}%;background:${s.color};"></div></div></div>`).join('')}
+    <h3 style="margin-top:20px;">Confidence Meter</h3>
+    <p class="sub">${confidenceMessage(doneActs/totalActs)}</p>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="small-btn" onclick="resetProgress()">🔄 Reset All Progress</button>
+      <button class="small-btn" onclick="unlockAllDays()">🔓 Unlock All Days</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📋 Skills Covered (K Review → 1st Grade Stretch)</h2>
+    <ul class="fun-list">
+      <li><b>Math:</b> counting/number sense to 20+, addition &amp; subtraction within 20, shapes (2D &amp; 3D), patterns, skip counting by 2s/5s/10s, place value (tens &amp; ones), telling time to the hour/half-hour, measurement, and money (1st grade stretch)</li>
+      <li><b>Reading:</b> CVC words, rhyming, consonant blends, digraphs, silent-e (CVCe) words, long vowel teams, compound words, contractions, and reading comprehension with literal &amp; inferential questions</li>
+      <li><b>Sight words:</b> rotating daily practice across Pre-Primer through 1st grade Dolch word sets</li>
+      <li><b>Fine motor:</b> daily handwriting practice tracing sight words</li>
+      <li><b>Confidence building:</b> every activity uses hints before answers, positive reinforcement, and adaptive difficulty so Joseph is always appropriately challenged — never bored, never frustrated</li>
+    </ul>
+    <p class="sub" style="margin-top:10px;">Each Math Mission and Phonics Power-Up has 3 tiers: getting a card right unlocks a harder one, so Joseph is automatically challenged past kindergarten review and into 1st grade thinking when he's ready.</p>
+  </div>`;
+}
+function confidenceMessage(ratio){
+  if(ratio >= 0.9) return "Joseph is showing excellent mastery and confidence — he's more than ready for 1st grade! 🏆";
+  if(ratio >= 0.5) return "Great momentum! He's building strong review skills and starting to tackle 1st grade challenges.";
+  return "Just getting started — little and often works best. Aim for one section a day!";
+}
+function resetProgress(){
+  if(confirm("This clears all of Joseph's progress. Are you sure?")){ state = defaultState(); save(); goto('home'); }
+}
+function unlockAllDays(){ state.unlockedDay = 14; save(); goto('home'); }
+
+/* =========================================================
+   CELEBRATION MODAL
+   ========================================================= */
+function showCelebration(d){
+  launchConfetti();
+  const overlay = document.createElement('div');
+  overlay.className='overlay';
+  overlay.innerHTML = `<div class="modal">
+    <div class="big-emoji">🏁🏆⭐</div>
+    <h2>Day ${d} Complete!</h2>
+    <p>Joseph earned 5 bonus coins and a new badge! Time for a victory dance! 🎉</p>
+    <button class="big-btn" onclick="this.closest('.overlay').remove(); goto('${d<14?'day':'rewards'}'${d<14?`,{day:${Math.min(d+1,14)}}`:''});">${d<14 ? 'Next Level ➡️' : 'See My Rewards 🏆'}</button>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+render('home');
+</script>
+</body>
+</html>
