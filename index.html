@@ -134,24 +134,79 @@ nav.tabs button:active{transform:translateY(2px);}
 .big-btn:disabled{opacity:0.4;box-shadow:none;transform:none;}
 .pill{display:inline-block;padding:5px 12px;border-radius:14px;font-size:12px;font-weight:800;background:#eaf1ff;color:var(--blue-deep);}
 
-/* ---------- HOME / DAY GRID ---------- */
+/* ---------- HOME / MONTH MAP / LEVEL PATH ---------- */
+.hero-card{background:linear-gradient(160deg,#fff9ec,#eaf3ff 60%,#ffeef2);}
 .mascot-row{display:flex;justify-content:center;gap:14px;margin:6px 0 18px;font-size:40px;flex-wrap:wrap;}
 .mascot-row span{background:var(--white);border-radius:50%;width:74px;height:74px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);border:3px solid #dbe8ff;outline:2px dashed #cfe0ff;outline-offset:3px;}
+.mascot-row span.bob{animation:bob 2.4s ease-in-out infinite;}
+.mascot-row span.b1{animation-delay:0s;} .mascot-row span.b2{animation-delay:.15s;} .mascot-row span.b3{animation-delay:.3s;} .mascot-row span.b4{animation-delay:.45s;} .mascot-row span.b5{animation-delay:.6s;}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0deg);}30%{transform:translateY(-9px) rotate(-6deg);}60%{transform:translateY(0) rotate(4deg);}}
 @media(max-width:420px){.mascot-row{gap:8px;font-size:32px;}.mascot-row span{width:58px;height:58px;}}
-.day-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:10px;}
-.day-chip{
-  border:none;border-radius:16px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-family:'Baloo 2',cursive;font-weight:700;font-size:18px;background:#eaf1ff;color:var(--blue-deep);
-  box-shadow:0 4px 0 rgba(30,111,255,0.2);gap:2px;border:2px solid #d9e6ff;
-}
-.day-chip .lbl{font-size:9px;font-weight:700;opacity:0.75;}
-.day-chip.done{background:linear-gradient(135deg,var(--green),var(--green-deep));color:white;box-shadow:0 4px 0 rgba(23,138,56,0.4);border-color:transparent;}
-.day-chip.today{background:linear-gradient(135deg,var(--red),var(--red-deep));color:white;box-shadow:0 4px 0 rgba(196,30,23,0.4);border-color:transparent;}
-.day-chip.locked{opacity:0.4;}
+
+.bounce-btn{animation:bouncein .5s ease;}
+@keyframes bouncein{0%{transform:scale(0.85);opacity:0;}60%{transform:scale(1.05);opacity:1;}100%{transform:scale(1);}}
+.bounce-btn:hover{animation:wiggle .5s ease;}
+@keyframes wiggle{0%,100%{transform:rotate(0);}25%{transform:rotate(-2deg) scale(1.02);}75%{transform:rotate(2deg) scale(1.02);}}
+
+.xp-bar{position:relative;height:22px;border-radius:14px;background:#eaf1ff;overflow:hidden;margin:10px 0 4px;border:2px solid #d9e6ff;box-shadow:inset 0 2px 4px rgba(0,0,0,0.08);}
+.xp-fill{height:100%;background:var(--speed);background-size:200% 100%;animation:speedmove 4s linear infinite;border-radius:14px;transition:width .5s ease;}
+.xp-shine{position:absolute;top:0;left:-40%;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.55),transparent);animation:shinesweep 2.8s ease-in-out infinite;}
+@keyframes shinesweep{0%{left:-40%;}100%{left:130%;}}
+
 .progressbar{height:14px;border-radius:10px;background:#eaf1ff;overflow:hidden;margin:8px 0 4px;border:1px solid #d9e6ff;}
 .progressbar > div{height:100%;background:var(--speed);background-size:200% 100%;animation:speedmove 4s linear infinite;border-radius:10px;transition:width .4s ease;}
 
+/* Month World Map */
+.month-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
+.month-card{
+  border:3px solid #dbe8ff;border-radius:22px;padding:16px 12px;background:linear-gradient(160deg,#ffffff,#f4f8ff);
+  display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;overflow:visible;
+  box-shadow:0 5px 0 rgba(30,111,255,0.18);transition:transform .12s ease;
+  animation:bouncein .5s ease both;
+}
+.month-card:active{transform:translateY(3px);}
+.month-card.active{border-color:var(--gold);box-shadow:0 5px 0 rgba(224,164,0,0.35),0 0 0 4px rgba(255,199,44,0.25);animation:bouncein .5s ease both, pulseglow 2s ease-in-out infinite;}
+@keyframes pulseglow{0%,100%{box-shadow:0 5px 0 rgba(224,164,0,0.35),0 0 0 4px rgba(255,199,44,0.25);}50%{box-shadow:0 5px 0 rgba(224,164,0,0.35),0 0 0 9px rgba(255,199,44,0.08);}}
+.month-card.complete{border-color:var(--green);background:linear-gradient(160deg,#f1fdf6,#e3faec);}
+.month-card.locked{opacity:0.5;filter:grayscale(0.4);}
+.month-trophy{position:absolute;top:-14px;right:-8px;font-size:26px;transform:rotate(12deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,0.2));}
+.month-emoji{font-size:38px;}
+.month-num{font-family:'Baloo 2',cursive;font-weight:800;font-size:12px;color:var(--blue-deep);letter-spacing:0.5px;text-transform:uppercase;}
+.month-title{font-family:'Baloo 2',cursive;font-weight:700;font-size:14px;text-align:center;line-height:1.15;min-height:32px;}
+.month-mini-bar{width:100%;height:8px;border-radius:6px;background:#eaf1ff;overflow:hidden;margin-top:2px;}
+.month-mini-bar > div{height:100%;background:linear-gradient(90deg,var(--green),var(--mint,#4de8c4));border-radius:6px;}
+.month-days-label{font-size:11px;font-weight:700;color:var(--dark-soft);}
+
+/* Level path (inside a Month) */
+.level-path{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0;margin-top:18px;}
+.level-node-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.level-node{
+  width:64px;height:64px;border-radius:50%;border:none;
+  font-family:'Baloo 2',cursive;font-weight:800;font-size:22px;color:white;
+  background:linear-gradient(135deg,var(--blue),var(--blue-deep));
+  box-shadow:0 5px 0 rgba(10,71,194,0.4);position:relative;
+  animation:bouncein .4s ease both;
+}
+.level-node-inner{position:relative;z-index:1;}
+.level-node.done{background:linear-gradient(135deg,var(--green),var(--green-deep));box-shadow:0 5px 0 rgba(23,138,56,0.4);}
+.level-node.today{background:linear-gradient(135deg,var(--red),var(--red-deep));box-shadow:0 5px 0 rgba(196,30,23,0.4);animation:bouncein .4s ease both, pulseglow2 1.6s ease-in-out infinite;}
+@keyframes pulseglow2{0%,100%{box-shadow:0 5px 0 rgba(196,30,23,0.4),0 0 0 0 rgba(238,59,50,0.4);}50%{box-shadow:0 5px 0 rgba(196,30,23,0.4),0 0 0 8px rgba(238,59,50,0);}}
+.level-node.locked{background:#dbe0ee;color:#9aa3c2;box-shadow:0 5px 0 rgba(154,163,194,0.3);}
+.level-node-label{font-size:11px;font-weight:800;color:var(--dark-soft);}
+.level-connector{width:26px;height:6px;background:#dbe8ff;border-radius:3px;margin:0 2px 22px;}
+@media(max-width:420px){.level-connector{width:14px;}.level-node{width:54px;height:54px;font-size:18px;}}
+
 /* ---------- DAY VIEW / SECTIONS ---------- */
+.day-nav-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;}
+.day-nav-row h2{flex:1;text-align:center;font-size:20px;}
+.day-nav-btn{
+  flex:0 0 auto;border:none;border-radius:14px;padding:10px 12px;font-weight:800;font-size:13px;
+  background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:white;
+  box-shadow:0 3px 0 rgba(10,71,194,0.35);font-family:'Baloo 2',cursive;white-space:nowrap;
+}
+.day-nav-btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(10,71,194,0.35);}
+.day-nav-btn:disabled{opacity:0.3;box-shadow:none;background:#dbe0ee;color:#9aa3c2;}
+@media(max-width:420px){.day-nav-row h2{font-size:16px;}.day-nav-btn{padding:8px 9px;font-size:11px;}}
 .section-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:520px){.section-grid{grid-template-columns:1fr;}}
 .section-card{border-radius:20px;padding:16px;background:#f7faff;border:2px solid #dbe8ff;display:flex;flex-direction:column;gap:8px;position:relative;transition:transform .12s ease;}
@@ -236,6 +291,7 @@ footer.note{text-align:center;font-size:11px;color:var(--dark-soft);opacity:0.75
    ========================================================= */
 
 // Each day has a math focus and a reading/phonics focus
+const TOTAL_DAYS = 30;
 const DAY_FOCUS = [
  {day:1,  mathTopic:'countTo20',      readTopic:'cvc',        sightSet:['the','see','like','go','can']},
  {day:2,  mathTopic:'addTo10',        readTopic:'rhyme',      sightSet:['I','you','my','we','look']},
@@ -250,8 +306,44 @@ const DAY_FOCUS = [
  {day:11, mathTopic:'measurement',    readTopic:'longVowelTeams', sightSet:['school','which','write','right']},
  {day:12, mathTopic:'money',          readTopic:'comprehension2', sightSet:['does','goes','been','into']},
  {day:13, mathTopic:'skipCount5_10',  readTopic:'contractions', sightSet:['once','upon','today','soon']},
- {day:14, mathTopic:'mixedReview',    readTopic:'mixedReview', sightSet:['first','second','third','next','last']}
+ {day:14, mathTopic:'mixedReview',    readTopic:'mixedReview', sightSet:['first','second','third','next','last']},
+ {day:15, mathTopic:'doubleDigitAdd', readTopic:'rControlledVowels', sightSet:['very','know','put','ask']},
+ {day:16, mathTopic:'comparingNumbers', readTopic:'diphthongsOWOU', sightSet:['round','soon','fly','give']},
+ {day:17, mathTopic:'skipCount3_4',   readTopic:'homophones', sightSet:['work','call','old','tell']},
+ {day:18, mathTopic:'doubleDigitSub', readTopic:'diphthongsOIOY', sightSet:['many','sit','set','under']},
+ {day:19, mathTopic:'wordProblems',   readTopic:'comprehension3', sightSet:['why','far','also','walk']},
+ {day:20, mathTopic:'comparingNumbers', readTopic:'silentLetters', sightSet:['open','pull','draw','hot']},
+ {day:21, mathTopic:'fractionsHalves', readTopic:'longVowelTeamsIGH', sightSet:['grow','hold','full','carry']},
+ {day:22, mathTopic:'doubleDigitAdd', readTopic:'rControlledVowels', sightSet:['light','fall','kind','laugh']},
+ {day:23, mathTopic:'graphingData',   readTopic:'diphthongsOWOU', sightSet:['very','know','round','soon']},
+ {day:24, mathTopic:'wordProblems',   readTopic:'homophones', sightSet:['fly','give','work','call']},
+ {day:25, mathTopic:'skipCount3_4',   readTopic:'silentLetters', sightSet:['old','tell','many','sit']},
+ {day:26, mathTopic:'fractionsHalves', readTopic:'comprehension4', sightSet:['set','under','why','far']},
+ {day:27, mathTopic:'doubleDigitSub', readTopic:'diphthongsOIOY', sightSet:['also','walk','open','pull']},
+ {day:28, mathTopic:'graphingData',   readTopic:'longVowelTeamsIGH', sightSet:['draw','hot','grow','hold']},
+ {day:29, mathTopic:'mixedReview2',   readTopic:'mixedReviewReading2', sightSet:['full','carry','light','fall']},
+ {day:30, mathTopic:'mixedReview2',   readTopic:'mixedReviewReading2', sightSet:['kind','laugh','very','know']}
 ];
+
+/* Ten "Months" of the learning journey — each groups a handful of days
+   into a themed world on the home screen's Month Map. */
+const MONTH_THEMES = [
+  {month:1,  title:'Letters & Numbers Launch',     emoji:'🚀', days:[1,3]},
+  {month:2,  title:'Shapes, Colors & Blends',       emoji:'🌈', days:[4,6]},
+  {month:3,  title:'Place Value Power-Up',          emoji:'🔟', days:[7,9]},
+  {month:4,  title:'Time & Measurement Quest',      emoji:'⏰', days:[10,12]},
+  {month:5,  title:'Skip Count Mastery',            emoji:'🎯', days:[13,14]},
+  {month:6,  title:'Bigger Numbers, Bigger Brain',  emoji:'💪', days:[15,17]},
+  {month:7,  title:'Tricky Sounds & True Stories',  emoji:'🔍', days:[18,20]},
+  {month:8,  title:'Fractions & Silent Letters',    emoji:'🍕', days:[21,23]},
+  {month:9,  title:'Graphing & Wordplay',           emoji:'📊', days:[24,26]},
+  {month:10, title:'Champion Review & Graduation',  emoji:'🏆', days:[27,30]}
+];
+function monthForDay(d){
+  const m = MONTH_THEMES.find(m => d >= m.days[0] && d <= m.days[1]);
+  return m ? m.month : 1;
+}
+function monthInfo(monthNum){ return MONTH_THEMES.find(m=>m.month===monthNum) || MONTH_THEMES[0]; }
 
 const BOOKS = [
  {
@@ -305,6 +397,45 @@ const BOOKS = [
    discussion:['What is your favorite dinosaur fact from the book?','What is the difference between a fact and a made-up story?','What job would you want if you could study dinosaurs?'],
    lesson:'Asking questions and looking for evidence is how we learn true things about the world — just like a scientist.',
    activity:'Draw your own dinosaur and write (or dictate) one true fact about it.'
+ },
+ {
+   id:'magictreehouse', title:'Dinosaurs Before Dark', author:'Mary Pope Osborne', emoji:'🌳',
+   days:[15,16,17,18,19],
+   videoUrl:'https://www.youtube.com/watch?v=_3Etg0hk4U0',
+   videoLabel:'Dinosaurs Before Dark — Full Read-Along Audiobook',
+   summary:"Jack and his sister Annie find a mysterious tree house filled with books. When Jack wishes to see a real pterodactyl, the tree house whisks them back to the time of the dinosaurs — now they must find a way home before dark.",
+   moment:"A favorite moment is when Jack starts keeping a notebook of everything he observes, just like a real scientist would.",
+   vocab:['mysterious','pterodactyl','prehistoric','notebook','adventure'],
+   funFacts:['This is the very first book in a huge series with over 30 adventures.','Jack writes down facts in a notebook the whole time — that\'s called research!','The tree house can travel through both time AND place.'],
+   discussion:['Where did the tree house take Jack and Annie?','Why do you think Jack likes to write things down?','If you had a magic tree house, what time period would you visit?'],
+   lesson:'Being curious and writing down what you notice — just like Jack\'s notebook — is how real scientists and explorers learn new things.',
+   activity:'Start your own "adventure notebook" — draw or write 3 things you would want to explore if you found a magic tree house.'
+ },
+ {
+   id:'ameliabedelia', title:"Amelia Bedelia's First Day of School", author:'Herman Parish', emoji:'🎒',
+   days:[20,21,22,23,24],
+   videoUrl:'https://www.youtube.com/watch?v=mvOH1TmJUFY',
+   videoLabel:"Amelia Bedelia's First Day of School — Read Aloud",
+   summary:"Amelia Bedelia is excited for her very first day of school, but she takes her teacher's instructions extremely literally — leading to silly, laugh-out-loud mix-ups all day long.",
+   moment:"A favorite moment is when Amelia Bedelia does exactly what she's told, word for word, and it turns into something completely unexpected and funny.",
+   vocab:['literally','instructions','classroom','mix-up','silly'],
+   funFacts:['Amelia Bedelia books are famous for wordplay — words and phrases that sound like they mean one thing but really mean another.','This kind of joke, where a phrase has two meanings, is part of learning about homophones and idioms.','The Amelia Bedelia series has been making kids laugh since 1963!'],
+   discussion:['What instructions did Amelia Bedelia take too literally?','Can you think of a phrase that could be confusing if you took it word-for-word?','What was YOUR first day of school like?'],
+   lesson:'Words can have more than one meaning, so it helps to think about what someone REALLY means, not just the exact words they say.',
+   activity:'Come up with your own silly "Amelia Bedelia" mix-up using a common phrase like "break a leg" or "it\'s raining cats and dogs."'
+ },
+ {
+   id:'llamallama', title:'Llama Llama Red Pajama', author:'Anna Dewdney', emoji:'🦙',
+   days:[25,26,27,28,29,30],
+   videoUrl:'https://www.youtube.com/watch?v=HD1g3P-nKWo',
+   videoLabel:'Llama Llama Red Pajama — Read by Author Anna Dewdney',
+   summary:"Baby Llama is tucked into bed by Mama Llama, but as soon as she leaves the room, he starts to worry and calls out for her again and again — a gentle, rhyming story about nighttime fears and a mama's love.",
+   moment:"A favorite moment is when Mama Llama comes rushing back and reminds Baby Llama that she is always close by, even when he can't see her.",
+   vocab:['pajama','drama','holler','llama','patience'],
+   funFacts:['This whole story is told in rhyme, which makes it fun to read out loud fast!','Llama Llama became such a popular character that there are now many books about him.','The book gently teaches kids that it\'s okay to feel worried sometimes.'],
+   discussion:['Why did Baby Llama start to feel worried?','What did Mama Llama do to help him feel better?','What helps YOU feel better when you\'re worried at bedtime?'],
+   lesson:'Everyone feels a little worried sometimes, and it always helps to remember that the people who love us are close by, even when we can\'t see them.',
+   activity:'Make up your own silly rhyme about your favorite bedtime routine, just like the Llama Llama books do.'
  }
 ];
 
@@ -328,7 +459,15 @@ const MATH_VIDEOS = {
   measurement: {title:"Measuring Length for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+measuring+length", channel:"Khan Academy Kids"},
   money: {title:"Counting Coins for Kids", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+counting+coins+money", channel:"Jack Hartmann"},
   skipCount5_10: {title:"We Can Count Together — Skip Counting", url:"https://www.youtube.com/watch?v=TShHga40XgQ", channel:"Jack Hartmann"},
-  mixedReview: {title:"Kindergarten Math Review", url:"https://www.youtube.com/results?search_query=Numberblocks+kindergarten+math+review", channel:"Numberblocks"}
+  mixedReview: {title:"Kindergarten Math Review", url:"https://www.youtube.com/results?search_query=Numberblocks+kindergarten+math+review", channel:"Numberblocks"},
+  doubleDigitAdd: {title:"Double Digit Addition for Kids", url:"https://www.youtube.com/results?search_query=Numberblocks+double+digit+addition", channel:"Numberblocks"},
+  doubleDigitSub: {title:"Double Digit Subtraction for Kids", url:"https://www.youtube.com/results?search_query=Numberblocks+double+digit+subtraction", channel:"Numberblocks"},
+  comparingNumbers: {title:"Comparing Numbers: Greater & Less Than", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+comparing+numbers+greater+than+less+than", channel:"Jack Hartmann"},
+  fractionsHalves: {title:"Fractions for Kids: Halves & Quarters", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+fractions+halves+quarters", channel:"Khan Academy Kids"},
+  graphingData: {title:"Graphing & Data for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+graphing+for+kids", channel:"Khan Academy Kids"},
+  wordProblems: {title:"Addition & Subtraction Word Problems", url:"https://www.youtube.com/results?search_query=Numberblocks+word+problems+for+kids", channel:"Numberblocks"},
+  skipCount3_4: {title:"Skip Counting by 3s and 4s", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+skip+counting+by+3s+and+4s", channel:"Jack Hartmann"},
+  mixedReview2: {title:"1st Grade Math Champion Review", url:"https://www.youtube.com/results?search_query=Numberblocks+1st+grade+math+review", channel:"Numberblocks"}
 };
 const READ_VIDEOS = {
   cvc: {title:"CVC Words for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+CVC+words", channel:"Khan Academy Kids"},
@@ -344,7 +483,16 @@ const READ_VIDEOS = {
   longVowelTeams: {title:"Long Vowel Teams for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+long+vowel+teams", channel:"Khan Academy Kids"},
   comprehension2: {title:"Reading Comprehension Practice", url:"https://www.youtube.com/results?search_query=PBS+KIDS+reading+comprehension+practice", channel:"PBS KIDS"},
   contractions: {title:"Contractions for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+contractions", channel:"Khan Academy Kids"},
-  mixedReview: {title:"1st Grade Reading Review", url:"https://www.youtube.com/results?search_query=PBS+KIDS+1st+grade+reading+review", channel:"PBS KIDS"}
+  mixedReview: {title:"1st Grade Reading Review", url:"https://www.youtube.com/results?search_query=PBS+KIDS+1st+grade+reading+review", channel:"PBS KIDS"},
+  rControlledVowels: {title:"R-Controlled Vowels: ar, er, ir, or, ur", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+r+controlled+vowels", channel:"Jack Hartmann"},
+  diphthongsOWOU: {title:"Diphthongs: ow and ou Sounds", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+diphthongs+ow+ou", channel:"Jack Hartmann"},
+  diphthongsOIOY: {title:"Diphthongs: oi and oy Sounds", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+diphthongs+oi+oy", channel:"Jack Hartmann"},
+  silentLetters: {title:"Silent Letters: kn, wr, gh", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+silent+letters", channel:"Khan Academy Kids"},
+  homophones: {title:"Homophones for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+homophones", channel:"Khan Academy Kids"},
+  longVowelTeamsIGH: {title:"Long Vowel Teams: igh and y", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+igh+long+vowel", channel:"Khan Academy Kids"},
+  comprehension3: {title:"Reading Comprehension Practice", url:"https://www.youtube.com/results?search_query=PBS+KIDS+reading+comprehension+1st+grade", channel:"PBS KIDS"},
+  comprehension4: {title:"Reading Comprehension Practice", url:"https://www.youtube.com/results?search_query=PBS+KIDS+reading+comprehension+practice+2", channel:"PBS KIDS"},
+  mixedReviewReading2: {title:"1st Grade Reading Champion Review", url:"https://www.youtube.com/results?search_query=PBS+KIDS+1st+grade+reading+champion+review", channel:"PBS KIDS"}
 };
 
 /* =========================================================
@@ -390,7 +538,7 @@ function markSectionComplete(d, key){
   if(ALL_SECTIONS.every(k=>s[k]) && !s.complete){
     s.complete = true;
     state.coins += 5;
-    if(state.unlockedDay === d && d < 14) state.unlockedDay = d+1;
+    if(state.unlockedDay === d && d < TOTAL_DAYS) state.unlockedDay = d+1;
     save();
     render('celebrate', {day:d});
     return;
@@ -444,6 +592,7 @@ function render(overrideView, overrideCtx){
   app.appendChild(wrap);
   if(v==='home') wrap.innerHTML = homeHTML();
   else if(v==='day') wrap.innerHTML = dayHTML(c.day || state.unlockedDay);
+  else if(v==='month') wrap.innerHTML = monthHTML(c.month || monthForDay(state.unlockedDay));
   else if(v==='math') wrap.innerHTML = mathHTML(c.day);
   else if(v==='reading') wrap.innerHTML = readingPhonicsHTML(c.day);
   else if(v==='sight') wrap.innerHTML = sightHTML(c.day);
@@ -476,44 +625,85 @@ function topbarHTML(){
 }
 function tabsHTML(v){
   const tabs = [['home','🏠 Home'],['day','📅 Today'],['story','📚 Reading'],['video','🎬 Videos'],['rewards','🏆 Rewards'],['parent','👨 Parent']];
-  return `<nav class="tabs">${tabs.map(t=>`<button class="${v===t[0]?'active':''}" onclick="goto('${t[0]}'${(t[0]==='day'||t[0]==='story'||t[0]==='video')?', {day: state.unlockedDay}':''})">${t[1]}</button>`).join('')}</nav>`;
+  const activeKey = (v==='month') ? 'home' : v;
+  return `<nav class="tabs">${tabs.map(t=>`<button class="${activeKey===t[0]?'active':''}" onclick="goto('${t[0]}'${(t[0]==='day'||t[0]==='story'||t[0]==='video')?', {day: state.unlockedDay}':''})">${t[1]}</button>`).join('')}</nav>`;
 }
 function footerHTML(){
   return `<footer class="note">Made with love for Joseph, NuNu's Big Boy. ❤️<br>
   Smart. Handsome. Curious and Brave. This learning adventure was created just for you, inspired by your favorite characters — Sonic and Super Mario Bros — and designed to make learning fun.<br>
-  <b>**Aligned with Kindergarten review and 1st Grade readiness: number sense, addition &amp; subtraction, place value, phonics, sight words, colors, shapes and reading comprehension**.</b></footer>`;
+  <b>Aligned with Kindergarten review and 1st Grade readiness: number sense, addition &amp; subtraction, place value, phonics, sight words, colors, shapes and reading comprehension.</b></footer>`;
 }
 
 /* =========================================================
-   HOME
+   HOME — 10-Month World Map
    ========================================================= */
 function homeHTML(){
   const completedCount = Object.values(state.days).filter(d=>d.complete).length;
-  const pct = Math.round((completedCount/14)*100);
-  let chips = '';
-  for(let d=1; d<=14; d++){
+  const pct = Math.round((completedCount/TOTAL_DAYS)*100);
+  const playDay = Math.min(state.unlockedDay, TOTAL_DAYS);
+
+  let monthCards = '';
+  MONTH_THEMES.forEach((m,idx)=>{
+    const [start,end] = m.days;
+    let monthDone = 0, monthTotal = 0;
+    for(let d=start; d<=end; d++){ monthTotal++; if(dayState(d).complete) monthDone++; }
+    const locked = state.unlockedDay < start;
+    const complete = monthDone === monthTotal;
+    const active = !locked && !complete;
+    monthCards += `<button class="month-card ${locked?'locked':''} ${complete?'complete':''} ${active?'active':''}" style="animation-delay:${idx*0.05}s" ${locked?'disabled':''} onclick="goto('month',{month:${m.month}})">
+      ${complete?'<div class="month-trophy">🏆</div>':''}
+      <div class="month-emoji">${locked?'🔒':m.emoji}</div>
+      <div class="month-num">World ${m.month}</div>
+      <div class="month-title">${m.title}</div>
+      <div class="month-mini-bar"><div style="width:${Math.round((monthDone/monthTotal)*100)}%"></div></div>
+      <div class="month-days-label">${monthDone}/${monthTotal} days</div>
+    </button>`;
+  });
+
+  return `
+  <div class="card hero-card">
+    <div class="mascot-row"><span class="bob b1">🦔</span><span class="bob b2">🍄</span><span class="bob b3">🏁</span><span class="bob b4">⭐</span><span class="bob b5">💰</span></div>
+    <h2 style="text-align:center;">${state.unlockedDay === 1 ? 'Welcome Joseph!' : 'Welcome back, Joseph!'} 🏁</h2>
+    <p class="sub" style="text-align:center;">${completedCount} of ${TOTAL_DAYS} days complete across 10 exciting worlds!</p>
+    <div class="xp-bar"><div class="xp-fill" style="width:${pct}%"></div><div class="xp-shine"></div></div>
+    <div style="margin-top:18px;">
+      <button class="big-btn bounce-btn" onclick="goto('day',{day:${playDay}})">▶️ Play Day ${playDay}</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>🗺️ 10-Month World Map</h2>
+    <p class="sub">Tap a glowing world to explore its days. Finish every world to become a Turbo Quest Champion!</p>
+    <div class="month-grid">${monthCards}</div>
+  </div>`;
+}
+
+/* =========================================================
+   MONTH VIEW — level-path of days within one themed world
+   ========================================================= */
+function monthHTML(monthNum){
+  const m = monthInfo(monthNum);
+  const [start,end] = m.days;
+  let nodes = '';
+  for(let d=start; d<=end; d++){
     const ds = dayState(d);
     const locked = d > state.unlockedDay;
     const done = ds.complete;
     const today = d===state.unlockedDay && !done;
-    chips += `<button class="day-chip ${done?'done':''} ${today?'today':''} ${locked?'locked':''}" ${locked?'disabled':''} onclick="goto('day',{day:${d}})">
-      <div>${done?'✅':d}</div><div class="lbl">Day ${d}</div>
-    </button>`;
+    nodes += `<div class="level-node-wrap">
+      <button class="level-node ${done?'done':''} ${today?'today':''} ${locked?'locked':''}" ${locked?'disabled':''} onclick="goto('day',{day:${d}})">
+        <span class="level-node-inner">${done?'⭐':(locked?'🔒':d)}</span>
+      </button>
+      <div class="level-node-label">Day ${d}</div>
+    </div>${d<end?'<div class="level-connector"></div>':''}`;
   }
-  return `
+  return `<button class="backbtn" onclick="goto('home')">← Back to World Map</button>
   <div class="card">
-    <div class="mascot-row"><span>🦔</span><span>🍄</span><span>🏁</span><span>⭐</span><span>💰</span></div>
-    <h2 style="text-align:center;">${state.unlockedDay === 1 ? 'Welcome Joseph!' : 'Welcome back, Joseph!'} 🏁</h2>
-    <p class="sub" style="text-align:center;">${completedCount} of 14 days complete — full speed ahead!</p>
-    <div class="progressbar"><div style="width:${pct}%"></div></div>
-    <div style="margin-top:18px;">
-      <button class="big-btn" onclick="goto('day',{day:${state.unlockedDay > 14 ? 14 : state.unlockedDay}})">▶️ Play Day ${state.unlockedDay > 14 ? 14 : state.unlockedDay}</button>
+    <div style="text-align:center;">
+      <div style="font-size:52px;">${m.emoji}</div>
+      <h2 style="margin:4px 0 2px;">World ${m.month}: ${m.title}</h2>
+      <p class="sub">Days ${start}–${end} · Complete every day to unlock the next world!</p>
     </div>
-  </div>
-  <div class="card">
-    <h2>🗺️ 14-Day World Map</h2>
-    <p class="sub">Tap any unlocked day to play. Finish all 8 activities to unlock the next level!</p>
-    <div class="day-grid">${chips}</div>
+    <div class="level-path">${nodes}</div>
   </div>`;
 }
 
@@ -535,19 +725,26 @@ function mathTopicLabel(t){
   const map = {countTo20:'Counting to 20+',addTo10:'Addition within 10',subTo10:'Subtraction within 10',shapesColors:'Shapes & Colors',
     patterns:'Patterns',skipCount2:'Skip Counting by 2s',placeValue:'Place Value: Tens & Ones',addTo20:'Addition within 20',
     subTo20:'Subtraction within 20',timeHour:'Telling Time',measurement:'Measuring Length',money:'Counting Money',
-    skipCount5_10:'Skip Counting by 5s & 10s',mixedReview:'Mixed Math Review'};
+    skipCount5_10:'Skip Counting by 5s & 10s',mixedReview:'Mixed Math Review',
+    doubleDigitAdd:'Double-Digit Addition',doubleDigitSub:'Double-Digit Subtraction',comparingNumbers:'Comparing Numbers',
+    fractionsHalves:'Fractions: Halves & Quarters',graphingData:'Graphing & Data',wordProblems:'Word Problems',
+    skipCount3_4:'Skip Counting by 3s & 4s',mixedReview2:'Champion Math Review'};
   return map[t] || 'Math';
 }
 function readTopicLabel(t){
   const map = {cvc:'CVC Words',rhyme:'Rhyming Words',blendBL_CL_FL:'Blends: bl, cl, fl',blendST_TR_SP:'Blends: st, tr, sp',
     digraphSH_CH:'Digraphs: sh, ch',cvce:'Silent E Words',comprehension1:'Reading Comprehension',compoundWords:'Compound Words',
     digraphWH_TH:'Digraphs: wh, th',blendGR_PL_SW:'Blends: gr, pl, sw',longVowelTeams:'Long Vowel Teams',comprehension2:'Reading Comprehension',
-    contractions:'Contractions',mixedReview:'Mixed Reading Review'};
+    contractions:'Contractions',mixedReview:'Mixed Reading Review',
+    rControlledVowels:'R-Controlled Vowels',diphthongsOWOU:'Diphthongs: ow, ou',homophones:'Homophones',
+    diphthongsOIOY:'Diphthongs: oi, oy',comprehension3:'Reading Comprehension',silentLetters:'Silent Letters',
+    longVowelTeamsIGH:'Long Vowel Team: igh',comprehension4:'Reading Comprehension',mixedReviewReading2:'Champion Reading Review'};
   return map[t] || 'Reading';
 }
 function dayHTML(d){
   const ds = dayState(d);
   const done = sectionsDoneCount(d);
+  const total = ALL_SECTIONS.length;
   let cards = '';
   Object.keys(SECTION_META).forEach(key=>{
     const meta = SECTION_META[key];
@@ -559,11 +756,18 @@ function dayHTML(d){
       <p>${meta.desc(d)}</p>
     </div>`;
   });
+  const hasPrev = d > 1;
+  const hasNext = (d+1) <= state.unlockedDay && (d+1) <= TOTAL_DAYS;
   return `
+  <button class="backbtn" onclick="goto('month',{month:${monthForDay(d)}})">← Back to World ${monthForDay(d)} Map</button>
   <div class="card">
-    <h2>Day ${d} ${ds.complete?'🏆 Complete!':''}</h2>
-    <p class="sub">${done}/8 activities done today · 15-30 minutes total</p>
-    <div class="progressbar"><div style="width:${(done/8)*100}%"></div></div>
+    <div class="day-nav-row">
+      <button class="day-nav-btn" ${hasPrev?'':'disabled'} onclick="goto('day',{day:${d-1}})">◀ Day ${d-1}</button>
+      <h2 style="margin:0;">Day ${d} ${ds.complete?'🏆 Complete!':''}</h2>
+      <button class="day-nav-btn" ${hasNext?'':'disabled'} onclick="goto('day',{day:${d+1}})">Day ${d+1} ▶</button>
+    </div>
+    <p class="sub" style="text-align:center;">${done}/${total} activities done today · 15-30 minutes total</p>
+    <div class="progressbar"><div style="width:${(done/total)*100}%"></div></div>
     <div class="section-grid" style="margin-top:14px;">${cards}</div>
   </div>`;
 }
@@ -736,6 +940,46 @@ function buildMathDeck(d){
       mkCard('Tier 1', `<div class="flash-caption" style="font-size:26px;">9 + 6 = ?</div>`, numOptions(15), [`Make a 10: 9+1=10, then add the leftover 5.`,`10 + 5 = ?`,`9 + 6 = 15!`], `9+6: make a ten first (9+1=10), then add the remaining 5 → 15.`),
       mkCard('Tier 2', `<div class="flash-caption" style="font-size:26px;">17 − 8 = ?</div>`, numOptions(9), [`Think: 8 + ? = 17.`,`Or break 17 into 10+7, subtract from there.`,`17 - 8 = 9!`], `17-8=9. Try thinking of the related addition fact: 8+9=17.`),
       mkCard('Tier 3 Challenge', `<div class="flash-caption">2 dimes and 1 nickel = how many cents?</div>`, numOptions(25), [`2 dimes = 20 cents.`,`Add the nickel: 20+5.`,`2 dimes + 1 nickel = 25 cents!`], `20 (two dimes) + 5 (one nickel) = 25 cents — a great mix of skip counting and money skills!`)
+    ],
+    doubleDigitAdd: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:24px;">23 + 15 = ?</div>`, numOptions(38), [`Add the ones first: 3 + 5 = 8.`,`Then add the tens: 20 + 10 = 30.`,`30 + 8 = 38!`], `Break it apart: ones (3+5=8) and tens (20+10=30), then combine: 38.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:24px;">27 + 16 = ?</div>`, numOptions(43), [`Ones: 7 + 6 = 13 — that's more than 10!`,`Carry the extra ten: 10+20+10=40, plus the leftover 3.`,`27 + 16 = 43!`], `When the ones add up past 10 (7+6=13), you carry a ten over to the tens place: 40+3=43.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Sam has 24 stickers. He gets 19 more. How many does he have now?</div>`, numOptions(43), [`This is 24 + 19 — add the ones, then the tens.`,`4+9=13, carry a ten: 20+10+10=40, plus 3 leftover.`,`24 + 19 = 43 stickers!`], `Word problems are just addition wearing a costume — find the numbers (24 and 19) and add them: 43.`)
+    ],
+    doubleDigitSub: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:24px;">58 − 23 = ?</div>`, numOptions(35), [`Subtract the ones first: 8 - 3 = 5.`,`Then the tens: 50 - 20 = 30.`,`30 + 5 = 35!`], `Break it apart: ones (8-3=5) and tens (50-20=30), then combine: 35.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:24px;">42 − 17 = ?</div>`, numOptions(25), [`The ones (2) are smaller than 7, so we need to borrow.`,`Borrow a ten from 40: now it's 12-7=5, and 3 tens left.`,`42 - 17 = 25!`], `When the top ones digit is too small, borrow a ten from the tens place: 12-7=5, then 3 tens left = 25.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">There were 50 pretzels. 24 were eaten. How many are left?</div>`, numOptions(26), [`This is 50 - 24.`,`Borrow a ten: 10-4=6, then 4 tens left minus 2 tens.`,`50 - 24 = 26 pretzels left!`], `50-24=26. Word problems just hide a subtraction fact inside a little story.`)
+    ],
+    comparingNumbers: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:24px;">Which sign goes between 14 and 19? 14 __ 19</div>`, shuffle([{label:'< (less than)',correct:true},{label:'> (greater than)',correct:false},{label:'= (equal)',correct:false}]), [`Which number comes first when counting: 14 or 19?`,`14 is smaller, so it needs the 'less than' sign.`,`14 < 19 — the open side of the sign faces the bigger number!`], `14 is less than 19, so we use < — the symbol always 'opens up' toward the bigger number.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which number is GREATER: 47 or 52?</div>`, shuffle([{label:'52',correct:true},{label:'47',correct:false}]), [`Compare the tens digit first: 4 tens vs 5 tens.`,`5 tens is more than 4 tens.`,`52 is greater than 47!`], `When comparing two-digit numbers, check the tens place first: 5 tens beats 4 tens, so 52 wins.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which of these is the SMALLEST? 23, 45, 9</div>`, shuffle([{label:'9',correct:true},{label:'23',correct:false},{label:'45',correct:false}]), [`A one-digit number is almost always smaller than a two-digit number.`,`9 only has one digit — it's less than 10.`,`9 is the smallest!`], `9 is a one-digit number, so it's smaller than both two-digit numbers (23 and 45).`)
+    ],
+    fractionsHalves: ()=>[
+      mkCard('Tier 1', `<div class="flash-emoji">◐</div><div class="flash-caption">This circle is split into 2 EQUAL parts with 1 shaded. What fraction is shaded?</div>`, shuffle([{label:'One half (1/2)',correct:true},{label:'One fourth (1/4)',correct:false},{label:'The whole thing',correct:false}]), [`Count the total equal parts, then how many are shaded.`,`2 equal parts, 1 is colored in.`,`That's one half!`], `When something is split into 2 equal parts and 1 is shaded, that's one half (1/2).`),
+      mkCard('Tier 2', `<div class="flash-caption">A pizza has 4 equal slices. You eat 1 slice. Do you have MORE or LESS than half left?</div>`, shuffle([{label:'More than half',correct:true},{label:'Less than half',correct:false}]), [`Half of 4 slices would be 2 slices.`,`You ate only 1 slice, so 3 are left.`,`3 slices left is more than half (2)!`], `Half of 4 slices is 2. Since 3 slices remain (more than 2), that's more than half left.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-emoji">▦</div><div class="flash-caption">A square is split into 4 equal parts with 1 shaded. What is this fraction called?</div>`, shuffle([{label:'One fourth (1/4), also called one quarter',correct:true},{label:'One half (1/2)',correct:false},{label:'One third (1/3)',correct:false}]), [`Count the total equal parts: how many pieces make the whole square?`,`4 equal parts, 1 shaded.`,`That's one fourth — also called one quarter!`], `4 equal parts with 1 shaded is called one fourth or one quarter (1/4) — like a quarter of a dollar!`)
+    ],
+    graphingData: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">🍎🍎🍎 vs 🍌🍌 — Which fruit has MORE votes?</div>`, shuffle([{label:'Apples 🍎',correct:true},{label:'Bananas 🍌',correct:false}]), [`Count each row of pictures.`,`3 apples vs 2 bananas.`,`Apples have more!`], `A picture graph shows amounts as pictures — count each row: 3 apples beats 2 bananas.`),
+      mkCard('Tier 2', `<div class="flash-caption">🍎🍎🍎🍎 vs 🍌🍌 — How many MORE apples than bananas?</div>`, numOptions(2), [`Count apples: 4. Count bananas: 2.`,`Subtract: 4 - 2 = ?`,`4 - 2 = 2 more apples!`], `Reading a graph often means comparing two counts with subtraction: 4 apples - 2 bananas = 2 more.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">🍎🍎🍎 + 🍌🍌 + 🍇🍇🍇🍇 — What is the TOTAL number of fruits?</div>`, numOptions(9), [`Count each group: 3 apples, 2 bananas, 4 grapes.`,`Add all three groups together: 3+2+4.`,`3+2+4 = 9 total fruits!`], `Totaling a graph means adding every category together: 3+2+4=9 — combining graphing with addition!`)
+    ],
+    wordProblems: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Maya had 6 crayons. Her friend gave her 3 more. How many crayons now?</div>`, numOptions(9), [`This is an addition problem — 'gave her more' means add.`,`6 + 3 = ?`,`Maya has 9 crayons now!`], `Key word 'gave her more' signals addition: 6+3=9.`),
+      mkCard('Tier 2', `<div class="flash-caption">There were 12 birds on a fence. 5 flew away. How many birds are left?</div>`, numOptions(7), [`'Flew away' means some left — that's subtraction.`,`12 - 5 = ?`,`7 birds are left!`], `Key word 'flew away' signals subtraction: 12-5=7.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Leo had 8 toy cars. He got 5 more for his birthday, then gave 3 to his brother. How many does he have now?</div>`, numOptions(10), [`First add the birthday cars: 8+5.`,`Then subtract the ones he gave away: 13-3.`,`8+5=13, then 13-3=10 cars!`], `Two-step problems need two operations in order: add first (8+5=13), then subtract (13-3=10).`)
+    ],
+    skipCount3_4: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Skip count by 3s: 3, 6, 9, ___</div>`, numOptions(12), [`Add 3 each time.`,`9 + 3 = ?`,`3,6,9,12!`], `Skip counting by 3s means adding 3 each time: 3,6,9,12.`),
+      mkCard('Tier 2', `<div class="flash-caption">Skip count by 4s: 4, 8, 12, ___</div>`, numOptions(16), [`Add 4 each time.`,`12 + 4 = ?`,`4,8,12,16!`], `Skip counting by 4s means adding 4 each time: 4,8,12,16.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Would you land on 20 skip counting by 3s starting at 0?</div>`, shuffle([{label:'No',correct:true},{label:'Yes',correct:false}]), [`List a few: 3,6,9,12,15,18,21...`,`Is 20 anywhere in that list?`,`20 is between 18 and 21 — you'd skip right past it!`], `Skip counting by 3s from 0 gives 3,6,9,12,15,18,21 — 20 never appears, since it isn't a multiple of 3.`)
+    ],
+    mixedReview2: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:24px;">26 + 13 = ?</div>`, numOptions(39), [`Add the ones: 6+3=9.`,`Add the tens: 20+10=30.`,`30+9=39!`], `Double-digit addition: ones (6+3=9) plus tens (20+10=30) = 39.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which is greater: 38 or 83?</div>`, shuffle([{label:'83',correct:true},{label:'38',correct:false}]), [`Compare the tens digit: 3 tens vs 8 tens.`,`8 tens is way more than 3 tens.`,`83 is greater!`], `Always check the tens place first when comparing: 8 tens beats 3 tens, so 83 wins.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">A farm has 34 chickens. 18 more hatch. How many chickens are there now?</div>`, numOptions(52), [`This is 34 + 18 — a word problem hiding addition.`,`Ones: 4+8=12, carry a ten. Tens: 30+10+10=50.`,`34 + 18 = 52 chickens!`], `Word problem + double-digit addition combined: 34+18=52 — everything Joseph has learned all year, put together!`)
     ]
   };
   return (builders[topic] || builders.mixedReview)();
@@ -826,6 +1070,51 @@ function buildReadingDeck(d){
       mkCard('Tier 1', `<div class="flash-caption">Which word rhymes with 'frog'?</div>`, shuffle([{label:'dog',correct:true},{label:'cat',correct:false},{label:'sun',correct:false}]), [`Listen for the -og ending.`,`Dog ends the same way as frog.`,`Dog rhymes with frog!`], `Dog and frog both end in the -og sound.`),
       mkCard('Tier 2', `<div class="flash-caption">Which word has a silent e?</div>`, shuffle([{label:'bike',correct:true},{label:'bit',correct:false},{label:'big',correct:false}]), [`Look for the e at the very end.`,`Bike ends in a silent e.`,`Bike has the silent e, making the i say its name!`], `Bike ends in silent e, making the 'i' say its long sound.`),
       mkCard('Tier 3 Challenge', `<div class="flash-caption">Which is the contraction for 'it is'?</div>`, shuffle([{label:"it's",correct:true},{label:'its',correct:false},{label:"i'ts",correct:false}]), [`Combine it + is, dropping the i.`,`The apostrophe replaces the missing letter.`,`It is = it's!`], `It+is → it's, with the apostrophe replacing the missing 'i.' (Careful: 'its' without an apostrophe means something belongs to it!)`)
+    ],
+    rControlledVowels: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word has the 'ar' sound, like in 'car'?</div>`, shuffle([{label:'star',correct:true},{label:'cat',correct:false},{label:'sit',correct:false}]), [`Listen for the /ar/ sound — the vowel gets 'controlled' by the r.`,`Star has 'ar' just like car.`,`Star has the 'ar' sound!`], `When 'r' follows a vowel, it changes the vowel's sound — 'ar' as in car and star.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has the 'or' sound, like in 'for'?</div>`, shuffle([{label:'corn',correct:true},{label:'fun',correct:false},{label:'cat',correct:false}]), [`Listen for /or/ — the o gets changed by the r right after it.`,`Corn has 'or' just like for.`,`Corn has the 'or' sound!`], `'Or' is another r-controlled vowel sound, as in for and corn.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which word has an r-controlled vowel: 'bird' or 'bed'?</div>`, shuffle([{label:'bird (the "ir" sound)',correct:true},{label:'bed',correct:false}]), [`Look for a vowel sitting right next to an r.`,`Bird has 'ir' — the r changes the i sound.`,`Bird has the r-controlled 'ir' sound!`], `Bird has 'ir', an r-controlled vowel team — the r changes how the i sounds, unlike bed which has a regular short e.`)
+    ],
+    diphthongsOWOU: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word has the 'ow' sound, like in 'cow'?</div>`, shuffle([{label:'now',correct:true},{label:'no',correct:false},{label:'not',correct:false}]), [`Listen for the sliding /ow/ sound.`,`Now rhymes with cow.`,`Now has the 'ow' sound!`], `A diphthong like 'ow' glides between two vowel sounds in one syllable, as in cow and now.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has the 'ou' sound, like in 'house'?</div>`, shuffle([{label:'mouse',correct:true},{label:'moss',correct:false},{label:'must',correct:false}]), [`Listen for the same gliding sound as in house.`,`Mouse rhymes with house.`,`Mouse has the 'ou' sound!`], `'Ou' makes the same gliding sound as 'ow' — house and mouse both have it.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">'Ow' and 'ou' can make the SAME sound. Which pair proves it: cow/now or cow/low?</div>`, shuffle([{label:'cow/now',correct:true},{label:'cow/low',correct:false}]), [`Say each pair out loud and listen closely.`,`Cow and now share the gliding /ow/ sound; low does not.`,`Cow and now match!`], `Cow and now both have the diphthong sound, while 'low' has a totally different long-o sound — tricky spelling, careful listening!`)
+    ],
+    diphthongsOIOY: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word has the 'oi' sound, like in 'coin'?</div>`, shuffle([{label:'oil',correct:true},{label:'on',correct:false},{label:'old',correct:false}]), [`Listen for the /oi/ gliding sound.`,`Oil rhymes with coin's vowel sound.`,`Oil has the 'oi' sound!`], `'Oi' is a diphthong found in the middle of words, like coin and oil.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has the 'oy' sound, like in 'boy'?</div>`, shuffle([{label:'toy',correct:true},{label:'to',correct:false},{label:'top',correct:false}]), [`Listen for the same sound as boy.`,`Toy rhymes with boy.`,`Toy has the 'oy' sound!`], `'Oy' usually shows up at the end of words, like boy and toy, while 'oi' shows up in the middle, like coin.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Why does 'boy' use 'oy' instead of 'oi'?</div>`, shuffle([{label:'Because oy comes at the end of the word',correct:true},{label:'There is no reason, it\'s random',correct:false}]), [`Compare where 'oi' shows up (coin, oil) versus where 'oy' shows up (boy, toy).`,`Notice a pattern about word position.`,`'Oy' is used at the END of words, 'oi' is used in the MIDDLE!`], `English spelling has a pattern: 'oi' appears in the middle of words (coin) and 'oy' appears at the end (boy) — noticing patterns like this is a real 1st grade phonics skill!`)
+    ],
+    silentLetters: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word starts with a silent 'k', like in 'knee'?</div>`, shuffle([{label:'knot',correct:true},{label:'not',correct:false},{label:'note',correct:false}]), [`The 'k' in 'kn' words is never spoken out loud.`,`Knot sounds just like 'not' — the k is silent.`,`Knot has the silent k!`], `In 'kn' words like knee and knot, the k is silent — you only hear the /n/ sound.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word starts with a silent 'w', like in 'write'?</div>`, shuffle([{label:'wrist',correct:true},{label:'wish',correct:false},{label:'wet',correct:false}]), [`The 'w' in 'wr' words is never spoken.`,`Wrist sounds like 'rist' — the w is silent.`,`Wrist has the silent w!`], `In 'wr' words like write and wrist, the w is silent — you only hear the /r/ sound.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which word has a silent 'gh', like in 'night'?</div>`, shuffle([{label:'light',correct:true},{label:'lit',correct:false},{label:'log',correct:false}]), [`Look for the 'igh' pattern — the gh doesn't make any sound.`,`Light sounds like 'lite' — the gh is silent.`,`Light has the silent gh!`], `In 'igh' words like night and light, the 'gh' is completely silent — it's just there for the spelling!`)
+    ],
+    homophones: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word means 'also', in the sentence "I want to go, __"? to / two / too</div>`, shuffle([{label:'too',correct:true},{label:'to',correct:false},{label:'two',correct:false}]), [`Homophones sound the same but mean different things and are spelled differently.`,`'Too' with two O's means 'also' or 'more than enough.'`,`I want to go too!`], `To, two, and too all sound the same (homophones), but 'too' (with 2 O's) means 'also.'`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word means 'belongs to them'? their / there / they're</div>`, shuffle([{label:'their',correct:true},{label:'there',correct:false},{label:"they're",correct:false}]), [`'Their' shows ownership, like 'his' or 'her.'`,`Think: 'their dog' = the dog that belongs to them.`,`Their means it belongs to them!`], `Their/there/they're are homophones: 'their' shows possession (their dog), 'there' shows place, and 'they're' means 'they are.'`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Fill in the blank: "I can __ the music." hear / here</div>`, shuffle([{label:'hear',correct:true},{label:'here',correct:false}]), [`'Hear' has the word 'ear' hidden inside it — a clue about listening!`,`'Here' means a location or place.`,`I can HEAR the music (listening) — hear has 'ear' inside it!`], `Hear (listening — notice the hidden 'ear'!) and here (a place) are homophones that trip up even grown-ups.`)
+    ],
+    longVowelTeamsIGH: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">'igh' in 'night' makes what vowel sound?</div>`, shuffle([{label:'Long I',correct:true},{label:'Short I',correct:false},{label:'Long E',correct:false}]), [`Say 'night' slowly — what does the i sound like?`,`It sounds like the letter I saying its own name.`,`'igh' makes the long I sound!`], `'Igh' is a 3-letter vowel team that makes the long I sound, as in night, light, and high.`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has the 'igh' long I sound: 'light' or 'lit'?</div>`, shuffle([{label:'light',correct:true},{label:'lit',correct:false}]), [`Look for the 'igh' letters together.`,`Light has i-g-h; lit does not.`,`Light has the 'igh' team!`], `Light contains the 'igh' vowel team; 'lit' just has a short i sound instead.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">The letter 'y' can also make the long I sound, like in 'fly'. Which word matches: 'fly' or 'funny'?</div>`, shuffle([{label:'fly (y says long I)',correct:true},{label:'funny (y says long E)',correct:false}]), [`Say both words and listen to what the y sounds like at the end.`,`In 'fly', the y is the only vowel and it says its long I name.`,`Fly's y says long I!`], `At the end of a short word with no other vowel, 'y' often says long I (fly, sky, my) — but in longer words like 'funny', y usually says long E instead. A tricky 1st grade pattern!`)
+    ],
+    comprehension3: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Mia found a puppy shivering in the rain. She wrapped it in her jacket and carried it home." <br><br>What did Mia find?</div>`, shuffle([{label:'A puppy',correct:true},{label:'A kitten',correct:false},{label:'A bird',correct:false}]), [`Look at the very first sentence.`,`The story names exactly what she found.`,`Mia found a puppy!`], `The opening sentence directly states Mia found a puppy.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Mia found a puppy shivering in the rain. She wrapped it in her jacket and carried it home." <br><br>Why did Mia wrap the puppy in her jacket?</div>`, shuffle([{label:'To keep it warm and dry',correct:true},{label:'Because it was a game',correct:false}]), [`Think about why the puppy was shivering.`,`Shivering means it was cold — what would help?`,`She wrapped it up to keep it warm!`], `This is an inference: the puppy was shivering (cold), so wrapping it in a jacket would help keep it warm and dry.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Mia found a puppy shivering in the rain. She wrapped it in her jacket and carried it home." <br><br>What character trait does Mia show in this story?</div>`, shuffle([{label:'Kindness / caring',correct:true},{label:'Silliness',correct:false}]), [`Think about her actions — what do they say about her?`,`She stopped to help a scared, cold animal.`,`Mia shows kindness and caring!`], `Identifying a character trait from actions (not just from what's stated) is a 1st grade comprehension skill — Mia's actions show she's kind and caring.`)
+    ],
+    comprehension4: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Every Saturday, Grandpa and Diego plant seeds in the garden. Diego waters them and pulls the weeds so the vegetables can grow big and strong." <br><br>What do Diego and Grandpa do every Saturday?</div>`, shuffle([{label:'Plant seeds in the garden',correct:true},{label:'Go to the park',correct:false},{label:'Bake cookies',correct:false}]), [`Look at the very first sentence.`,`The story tells you exactly what they do.`,`They plant seeds in the garden!`], `The opening sentence directly states their Saturday routine: planting seeds in the garden.`),
+      mkCard('Tier 2', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Every Saturday, Grandpa and Diego plant seeds in the garden. Diego waters them and pulls the weeds so the vegetables can grow big and strong." <br><br>What is Diego's JOB in the garden?</div>`, shuffle([{label:'Watering and pulling weeds',correct:true},{label:'Planting the seeds',correct:false}]), [`Look at the second sentence for Diego's specific tasks.`,`The story separates who does what.`,`Diego waters and pulls weeds!`], `The second sentence tells us Diego's specific role: watering the plants and pulling weeds.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:16px; text-align:left;">"Every Saturday, Grandpa and Diego plant seeds in the garden. Diego waters them and pulls the weeds so the vegetables can grow big and strong." <br><br>Why does Diego pull the weeds?</div>`, shuffle([{label:'So the vegetables have room to grow big and strong',correct:true},{label:'Because weeds are his favorite plant',correct:false}]), [`Look at the very end of the sentence for the reason.`,`The word 'so' often introduces a reason or purpose.`,`He pulls weeds SO the vegetables can grow big and strong!`], `The word 'so' signals cause and effect — Diego pulls weeds for the purpose of helping the vegetables grow. Spotting purpose is a 1st grade comprehension skill.`)
+    ],
+    mixedReviewReading2: ()=>[
+      mkCard('Tier 1', `<div class="flash-caption">Which word has an r-controlled vowel?</div>`, shuffle([{label:'star',correct:true},{label:'sat',correct:false},{label:'sit',correct:false}]), [`Look for a vowel right next to an r.`,`Star has 'ar.'`,`Star has the r-controlled 'ar'!`], `Star has the r-controlled vowel team 'ar.'`),
+      mkCard('Tier 2', `<div class="flash-caption">Which word has a silent letter?</div>`, shuffle([{label:'knee',correct:true},{label:'need',correct:false},{label:'seed',correct:false}]), [`Look for a 'kn' at the start.`,`Knee starts with a silent k.`,`Knee has the silent k!`], `Knee has a silent k — you only hear the /n/ sound.`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which pair are homophones (sound the same, different meanings)?</div>`, shuffle([{label:'hear / here',correct:true},{label:'hear / hair',correct:false},{label:'here / hair',correct:false}]), [`Say each pair out loud — which two sound exactly the same?`,`Hear and here are pronounced identically.`,`Hear and here are the homophone pair!`], `Hear and here sound exactly alike but mean different things — the definition of homophones.`)
     ]
   };
   return (builders[topic] || builders.mixedReview)();
@@ -1269,7 +1558,7 @@ function videoHTML(d){
     <div style="margin-top:12px;">
       <p style="font-weight:700;">Can you show me an example?</p>
       <div class="opt-grid" style="grid-template-columns:1fr 1fr;">
-        ${mcOptions.map(opt=>`<button class="opt-btn ${notes.q1===opt?'correct':''}" style="font-size:13px;padding:12px 6px;" onclick="saveVideoAnswer(${d},'q1','${opt.replace(/'/g,"\\'")}')">${opt}</button>`).join('')}
+        ${mcOptions.map(opt=>`<button class="opt-btn ${notes.q1===opt?'correct':''}" style="font-size:13px;padding:12px 6px;" onclick="saveVideoAnswer(${d},'q1','${opt.replace(/'/g,"\'")}')">${opt}</button>`).join('')}
       </div>
     </div>
 
@@ -1318,12 +1607,12 @@ function rewardsHTML(){
   const completedDays = Object.values(state.days).filter(d=>d.complete).length;
   return `<div class="card">
     <h2>🏆 My Rewards</h2>
-    <p class="sub">${state.coins} coins earned · ${earned.length} badges collected · ${completedDays}/14 days complete</p>
+    <p class="sub">${state.coins} coins earned · ${earned.length} badges collected · ${completedDays}/${TOTAL_DAYS} days complete</p>
     <div class="sticker-wall">${wall}</div>
   </div>
   <div class="card">
     <h2>🎓 Certificate</h2>
-    <p class="sub">${completedDays >= 14 ? "You beat the whole academy! Print your certificate below." : "Finish all 14 days to unlock your printable certificate!"}</p>
+    <p class="sub">${completedDays >= TOTAL_DAYS ? "You beat the whole academy! Print your certificate below." : `Finish all ${TOTAL_DAYS} days to unlock your printable certificate!`}</p>
     <div style="border:6px double #1E6FFF;border-radius:18px;padding:24px;text-align:center;background:#f7faff;">
       <div style="font-size:40px;">🏆</div>
       <h2 style="margin:8px 0 0;">Certificate of Achievement</h2>
@@ -1331,7 +1620,7 @@ function rewardsHTML(){
       <h2 style="color:var(--red-deep);margin:0;">Joseph Hodges VI</h2>
       <p style="margin:10px 0 0;">completed the Turbo Quest Academy<br>Kindergarten Review &amp; 1st Grade Readiness Program</p>
     </div>
-    <button class="big-btn blue" style="margin-top:14px;" onclick="window.print()" ${completedDays>=14?'':'disabled'}>🖨️ Print Certificate</button>
+    <button class="big-btn blue" style="margin-top:14px;" onclick="window.print()" ${completedDays>=TOTAL_DAYS?'':'disabled'}>🖨️ Print Certificate</button>
   </div>`;
 }
 
@@ -1341,7 +1630,7 @@ function rewardsHTML(){
 function parentHTML(){
   const completedDays = Object.values(state.days).filter(d=>d.complete).length;
   let totalActs=0, doneActs=0;
-  for(let d=1;d<=14;d++){ const s=dayState(d); ALL_SECTIONS.forEach(k=>{totalActs++; if(s[k]) doneActs++;}); }
+  for(let d=1;d<=TOTAL_DAYS;d++){ const s=dayState(d); ALL_SECTIONS.forEach(k=>{totalActs++; if(s[k]) doneActs++;}); }
   const subjects = [
     {label:'Math Mission', pct: pctFor('math'), color:'#1E6FFF'},
     {label:'Phonics & Reading', pct: pctFor('reading'), color:'#EE3B32'},
@@ -1351,10 +1640,10 @@ function parentHTML(){
     {label:'Comprehension', pct: pctFor('story'), color:'#00D4FF'},
     {label:'Video Learning', pct: pctFor('video'), color:'#FF6B00'}
   ];
-  function pctFor(key){ let done=0, tot=0; for(let d=1; d<=14; d++){ tot++; if(dayState(d)[key]) done++; } return Math.round((done/tot)*100); }
+  function pctFor(key){ let done=0, tot=0; for(let d=1; d<=TOTAL_DAYS; d++){ tot++; if(dayState(d)[key]) done++; } return Math.round((done/tot)*100); }
   return `<div class="card">
     <h2>👨 Parent Dashboard</h2>
-    <p class="sub">${completedDays}/14 days complete · ${doneActs}/${totalActs} activities complete · ${state.coins} total coins</p>
+    <p class="sub">${completedDays}/${TOTAL_DAYS} days complete · ${doneActs}/${totalActs} activities complete · ${state.coins} total coins</p>
     <div class="progressbar"><div style="width:${Math.round((doneActs/totalActs)*100)}%"></div></div>
     <h3 style="margin-top:20px;">Mastery by Subject</h3>
     ${subjects.map(s=>`<div class="bar-row"><div class="lbl"><span>${s.label}</span><span>${s.pct}%</span></div><div class="bar-track"><div class="bar-fill" style="width:${s.pct}%;background:${s.color};"></div></div></div>`).join('')}
@@ -1398,7 +1687,7 @@ function showCelebration(d){
     <div class="big-emoji">🏁🏆⭐</div>
     <h2>Day ${d} Complete!</h2>
     <p>Joseph earned 5 bonus coins and a new badge! Time for a victory dance! 🎉</p>
-    <button class="big-btn" onclick="this.closest('.overlay').remove(); goto('${d<14?'day':'rewards'}'${d<14?`,{day:${Math.min(d+1,14)}}`:''});">${d<14 ? 'Next Level ➡️' : 'See My Rewards 🏆'}</button>
+    <button class="big-btn" onclick="this.closest('.overlay').remove(); goto('${d<TOTAL_DAYS?'day':'rewards'}'${d<TOTAL_DAYS?`,{day:${Math.min(d+1,TOTAL_DAYS)}}`:''});">${d<TOTAL_DAYS ? 'Next Level ➡️' : 'See My Rewards 🏆'}</button>
   </div>`;
   document.body.appendChild(overlay);
 }
