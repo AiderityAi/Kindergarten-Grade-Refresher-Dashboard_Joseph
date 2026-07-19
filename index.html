@@ -240,7 +240,7 @@ const DAY_FOCUS = [
  {day:1,  mathTopic:'countTo20',      readTopic:'cvc',        sightSet:['the','see','like','go','can']},
  {day:2,  mathTopic:'addTo10',        readTopic:'rhyme',      sightSet:['I','you','my','we','look']},
  {day:3,  mathTopic:'subTo10',        readTopic:'blendBL_CL_FL', sightSet:['have','said','was','they']},
- {day:4,  mathTopic:'shapes2D',       readTopic:'blendST_TR_SP', sightSet:['come','some','play','little']},
+ {day:4,  mathTopic:'shapesColors',   readTopic:'blendST_TR_SP', sightSet:['come','some','play','little']},
  {day:5,  mathTopic:'patterns',       readTopic:'digraphSH_CH', sightSet:['what','when','where','who']},
  {day:6,  mathTopic:'skipCount2',     readTopic:'cvce',       sightSet:['make','take','ride','time']},
  {day:7,  mathTopic:'placeValue',     readTopic:'comprehension1', sightSet:['there','their','said','were']},
@@ -318,7 +318,7 @@ const MATH_VIDEOS = {
   countTo20: {title:"Learn to Count 1 to 20 with Numberblocks", url:"https://www.youtube.com/watch?v=FhQ95Q79Hxo", channel:"Numberblocks"},
   addTo10: {title:"Addition within 10 with Numberblocks", url:"https://www.youtube.com/results?search_query=Numberblocks+addition+within+10", channel:"Numberblocks"},
   subTo10: {title:"Subtraction within 10 with Numberblocks", url:"https://www.youtube.com/results?search_query=Numberblocks+subtraction+within+10", channel:"Numberblocks"},
-  shapes2D: {title:"2D & 3D Shapes for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+2D+and+3D+shapes", channel:"Khan Academy Kids"},
+  shapesColors: {title:"Shapes & Colors for Kids", url:"https://www.youtube.com/results?search_query=Khan+Academy+Kids+shapes+and+colors", channel:"Khan Academy Kids"},
   patterns: {title:"Patterns for Kindergarten", url:"https://www.youtube.com/results?search_query=PBS+KIDS+patterns+for+kindergarten", channel:"PBS KIDS"},
   skipCount2: {title:"Dancing 2's — Skip Count by 2's", url:"https://www.youtube.com/watch?v=OCxvNtrcDIs", channel:"Jack Hartmann"},
   placeValue: {title:"Tens and Ones Place Value", url:"https://www.youtube.com/results?search_query=Jack+Hartmann+tens+and+ones+place+value", channel:"Jack Hartmann"},
@@ -358,6 +358,8 @@ function defaultState(){
     days:{},
     tierProgress:{}, // per day+subject tier tracking not strictly needed, engine handles per-session
     stickers:[],
+    memoryHistory:{},   // per-day memory game results: {pairs, timeSec, mistakes, rating}
+    memoryBestTimes:{}, // best completion time per difficulty (pairs count)
   };
 }
 var state = load();
@@ -429,7 +431,10 @@ function launchConfetti(){
    ========================================================= */
 var view = 'home';
 var ctx = {};
-function goto(v, c={}){ view=v; ctx=c; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+function goto(v, c={}){
+  if(memState && memState.timerId && !memState.finished){ clearInterval(memState.timerId); memState.timerId = null; }
+  view=v; ctx=c; render(); window.scrollTo({top:0,behavior:'smooth'});
+}
 function render(overrideView, overrideCtx){
   const v = overrideView || view;
   const c = overrideCtx || ctx;
@@ -475,9 +480,8 @@ function tabsHTML(v){
 }
 function footerHTML(){
   return `<footer class="note">Made with love for Joseph, NuNu's Big Boy. ❤️<br>
-  Smart. Handsome. Curious and Brave. This learning adventure was created just for you, inspired by your favorite characters Sonic and Super Mario Bros and designed to make learning fun.<br>
-  
-  **Supports Kindergarten Review &amp; 1st Grade Readiness: number sense, addition &amp; subtraction, place value, phonics, sight words, and reading comprehension.**</footer>`;
+  Smart. Handsome. Curious and Brave. This learning adventure was created just for you, inspired by your favorite characters — Sonic and Super Mario Bros — and designed to make learning fun.<br>
+  <b>**Aligned with Kindergarten review and 1st Grade readiness: number sense, addition &amp; subtraction, place value, phonics, sight words, colors, shapes and reading comprehension**.</b></footer>`;
 }
 
 /* =========================================================
@@ -499,7 +503,7 @@ function homeHTML(){
   return `
   <div class="card">
     <div class="mascot-row"><span>🦔</span><span>🍄</span><span>🏁</span><span>⭐</span><span>💰</span></div>
-    <h2 style="text-align:center;">Welcome back, Joseph! 🏁</h2>
+    <h2 style="text-align:center;">${state.unlockedDay === 1 ? 'Welcome Joseph!' : 'Welcome back, Joseph!'} 🏁</h2>
     <p class="sub" style="text-align:center;">${completedCount} of 14 days complete — full speed ahead!</p>
     <div class="progressbar"><div style="width:${pct}%"></div></div>
     <div style="margin-top:18px;">
@@ -528,7 +532,7 @@ const SECTION_META = {
   video:{icon:'🎬', title:'Video Learning', desc:d=>`Watch & reflect`}
 };
 function mathTopicLabel(t){
-  const map = {countTo20:'Counting to 20+',addTo10:'Addition within 10',subTo10:'Subtraction within 10',shapes2D:'2D & 3D Shapes',
+  const map = {countTo20:'Counting to 20+',addTo10:'Addition within 10',subTo10:'Subtraction within 10',shapesColors:'Shapes & Colors',
     patterns:'Patterns',skipCount2:'Skip Counting by 2s',placeValue:'Place Value: Tens & Ones',addTo20:'Addition within 20',
     subTo20:'Subtraction within 20',timeHour:'Telling Time',measurement:'Measuring Length',money:'Counting Money',
     skipCount5_10:'Skip Counting by 5s & 10s',mixedReview:'Mixed Math Review'};
@@ -675,10 +679,13 @@ function buildMathDeck(d){
       mkCard('Tier 2', `<div class="flash-caption" style="font-size:26px;">9 − 4 = ?</div>`, numOptions(5), [`Count back from 9: 8, 7, 6, 5.`,`Think: what plus 4 equals 9?`,`9 - 4 = 5!`], `You can count back (9,8,7,6,5) or think 'what number plus 4 makes 9?'`),
       mkCard('Tier 3 Challenge', `<div class="flash-caption" style="font-size:24px;">10 − 6 = ?</div>`, numOptions(4), [`Think of a ten-frame: 10 boxes, take away 6.`,`10 minus 6 — count back or think of addition: 6 + ? = 10.`,`10 - 6 = 4!`], `10 - 6 = 4. Knowing your 'friends of 10' makes this quick: 6+4=10.`)
     ],
-    shapes2D: ()=>[
+    shapesColors: ()=>[
       mkCard('Tier 1', `<div class="flash-emoji">🔺</div><div class="flash-caption">How many sides does a triangle have?</div>`, shuffle([{label:'3',correct:true},{label:'4',correct:false},{label:'5',correct:false},{label:'2',correct:false}]), [`Count each straight edge.`,`Tri- means three, like tricycle!`,`A triangle has 3 sides and 3 corners.`], `Triangle has 3 sides — 'tri' means three!`),
+      mkCard('Tier 1', `<div class="flash-emoji">🟥</div><div class="flash-caption">What color is this square?</div>`, shuffle([{label:'Red',correct:true},{label:'Blue',correct:false},{label:'Yellow',correct:false},{label:'Green',correct:false}]), [`Think of a fire truck or an apple.`,`This warm color is the first color of the rainbow.`,`It's red!`], `This square is red — a primary color, like a fire truck or a strawberry.`),
       mkCard('Tier 2', `<div class="flash-caption">Which shape has 4 equal sides?</div>`, shuffle([{label:'Square',correct:true},{label:'Rectangle',correct:false},{label:'Triangle',correct:false},{label:'Circle',correct:false}]), [`A rectangle has 4 sides too, but not all equal.`,`This shape looks the same on every side.`,`A square has 4 equal sides!`], `A square has 4 sides that are all the same length; a rectangle's sides are not all equal.`),
-      mkCard('Tier 3 Challenge', `<div class="flash-emoji">🧊</div><div class="flash-caption">This is a 3D shape called a cube. How many flat faces does it have?</div>`, shuffle([{label:'6',correct:true},{label:'4',correct:false},{label:'8',correct:false},{label:'12',correct:false}]), [`Think of a dice — count each flat side.`,`Top, bottom, and 4 sides around.`,`A cube has 6 faces, like a die!`], `A cube (like a die) has 6 flat faces — this is 1st grade 3D shape knowledge!`)
+      mkCard('Tier 2', `<div class="flash-caption">Mixing blue and yellow paint makes what color?</div>`, shuffle([{label:'Green',correct:true},{label:'Purple',correct:false},{label:'Orange',correct:false},{label:'Red',correct:false}]), [`Think of grass or leaves.`,`Blue + yellow is a classic color-mixing trick.`,`Blue and yellow make green!`], `Blue and yellow are primary colors that mix together to make green — a 1st grade color science fact!`),
+      mkCard('Tier 3 Challenge', `<div class="flash-emoji">🧊</div><div class="flash-caption">This is a 3D shape called a cube. How many flat faces does it have?</div>`, shuffle([{label:'6',correct:true},{label:'4',correct:false},{label:'8',correct:false},{label:'12',correct:false}]), [`Think of a dice — count each flat side.`,`Top, bottom, and 4 sides around.`,`A cube has 6 faces, like a die!`], `A cube (like a die) has 6 flat faces — this is 1st grade 3D shape knowledge!`),
+      mkCard('Tier 3 Challenge', `<div class="flash-caption">Which shape below is BOTH a rectangle AND orange? 🟧(square) 🟠(circle) 🟧(rectangle)</div>`, shuffle([{label:'The orange rectangle',correct:true},{label:'The orange square',correct:false},{label:'The orange circle',correct:false}]), [`First find all the orange shapes, then check which one is a rectangle.`,`A rectangle has 4 sides with two pairs of equal length, longer than it is tall.`,`The orange rectangle matches both clues!`], `This combines two skills at once — sorting by shape AND color, just like 1st graders learn to classify objects by more than one property.`)
     ],
     patterns: ()=>[
       mkCard('Tier 1', `<div class="flash-caption">What comes next? 🔵🔴🔵🔴🔵___</div>`, shuffle([{label:'🔴',correct:true},{label:'🔵',correct:false},{label:'🟡',correct:false},{label:'🟢',correct:false}]), [`Look at the pattern: blue, red, blue, red...`,`It repeats every 2 shapes.`,`Blue, red, blue, red, blue, RED comes next!`], `The pattern is AB AB AB — blue, red repeating. Next is red.`),
@@ -1034,31 +1041,70 @@ function nextWriteWord(d){
 
 /* =========================================================
    MEMORY MATCH
+   Adaptive difficulty (more pairs as days progress, nudged by
+   how fast/accurate the previous day's game was), a live timer,
+   and an extra "fireworks" celebration when Joseph beats his
+   personal best time for that difficulty level.
    ========================================================= */
 var memState = {};
+const MEMORY_SYMBOL_POOL = ['🎮','🔤','⚡','🎯','⭐','💰','🏁','🍄','🚀','🏆'];
+function pairsForDay(d){
+  // Baseline trends upward across the 14 days: 4 pairs early, up to 8 by the end.
+  const base = Math.min(8, 4 + Math.floor((d-1)/3));
+  // Nudge based on how the previous day's memory game went.
+  const prev = state.memoryHistory && state.memoryHistory[d-1];
+  let adj = 0;
+  if(prev){
+    if(prev.rating === 'fast') adj = 1;
+    else if(prev.rating === 'slow') adj = -1;
+  }
+  return Math.max(4, Math.min(8, base + adj));
+}
+function parTimeSeconds(pairs){ return pairs * 6; }
 function memoryHTML(d){
   return activityHeader(d, `🧠 Memory Match`) +
-  `<p class="sub">Flip two cards and find the matching pairs!</p>
-  <div class="stage"><div class="memgrid" id="memgrid"></div><div id="memWin" style="margin-top:14px;"></div></div>
+  `<p class="sub">Flip two cards and find the matching pairs — try to beat your best time!</p>
+  <div class="stage">
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+      <div class="pill" id="mem-timer">⏱️ 0:00</div>
+      <div class="pill" id="mem-tries" style="background:#ffe9d6;color:#b5540a;">🔄 0 tries</div>
+    </div>
+    <div class="memgrid" id="memgrid"></div>
+    <div id="memWin" style="margin-top:14px;"></div>
+  </div>
   </div>`;
 }
 function initMemoryGame(d){
-  const f = focusForDay(d);
-  const symbols = ['🔢','🔤','⚡','🎯','⭐','💰'];
+  const pairs = pairsForDay(d);
+  const symbols = MEMORY_SYMBOL_POOL.slice(0, pairs);
   let cards = shuffle([...symbols, ...symbols]).map((s,i)=>({id:i, val:s, flipped:false, matched:false}));
-  memState = {cards, first:null, second:null, lock:false, dayNum:d};
+  const cols = pairs <= 4 ? 4 : (pairs <= 6 ? 4 : 5);
+  const grid = document.getElementById('memgrid');
+  if(grid) grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  memState = {cards, first:null, second:null, lock:false, dayNum:d, pairs, mistakes:0, startTime:Date.now(), timerId:null, finished:false};
+  memState.timerId = setInterval(updateMemTimer, 1000);
   renderMemGrid();
+}
+function updateMemTimer(){
+  if(!memState || memState.finished) return;
+  const el = document.getElementById('mem-timer');
+  if(!el) return;
+  const secs = Math.floor((Date.now()-memState.startTime)/1000);
+  const m = Math.floor(secs/60), s = secs%60;
+  el.innerText = `⏱️ ${m}:${s<10?'0':''}${s}`;
 }
 function renderMemGrid(){
   const grid = document.getElementById('memgrid');
   if(!grid) return;
-  grid.innerHTML = memState.cards.map(c=>`<div class="memcard ${c.flipped||c.matched?'flipped':''} ${c.matched?'matched':''}" onclick="flipMem(${c.id})">${(c.flipped||c.matched) ? c.val : '<span style=\"font-family: Baloo 2, sans-serif; font-weight:800;\">?</span>'}</div>`).join('');
-  if(memState.cards.every(c=>c.matched)){
-    document.getElementById('memWin').innerHTML = `<div class="feedback">🏆 You matched them all!</div><button class="big-btn green" style="margin-top:10px;" onclick="finishMemory(${memState.dayNum})">Continue ➡️</button>`;
+  grid.innerHTML = memState.cards.map(c=>`<div class="memcard ${c.flipped||c.matched?'flipped':''} ${c.matched?'matched':''}" onclick="flipMem(${c.id})">${(c.flipped||c.matched) ? c.val : '<span style="font-family: Baloo 2, sans-serif; font-weight:800;">?</span>'}</div>`).join('');
+  const triesEl = document.getElementById('mem-tries');
+  if(triesEl) triesEl.innerText = `🔄 ${memState.mistakes} ${memState.mistakes===1?'try':'tries'}`;
+  if(memState.cards.every(c=>c.matched) && !memState.finished){
+    completeMemoryGame();
   }
 }
 function flipMem(id){
-  if(memState.lock) return;
+  if(memState.lock || memState.finished) return;
   const c = memState.cards.find(x=>x.id===id);
   if(c.flipped||c.matched) return;
   c.flipped = true;
@@ -1069,13 +1115,67 @@ function flipMem(id){
     renderMemGrid();
     setTimeout(()=>{
       if(memState.first.val === memState.second.val){ memState.first.matched = true; memState.second.matched = true; }
-      else { memState.first.flipped = false; memState.second.flipped = false; }
+      else { memState.first.flipped = false; memState.second.flipped = false; memState.mistakes++; }
       memState.first = null; memState.second=null; memState.lock=false;
       renderMemGrid();
     }, 700);
     return;
   }
   renderMemGrid();
+}
+function completeMemoryGame(){
+  memState.finished = true;
+  if(memState.timerId) clearInterval(memState.timerId);
+  const elapsed = Math.round((Date.now()-memState.startTime)/1000);
+  const pairs = memState.pairs;
+  const par = parTimeSeconds(pairs);
+  const mistakesPar = pairs;
+
+  let rating = 'steady';
+  if(elapsed <= par*0.75 && memState.mistakes <= mistakesPar*0.5) rating = 'fast';
+  else if(elapsed >= par*1.4 || memState.mistakes >= mistakesPar*1.5) rating = 'slow';
+
+  if(!state.memoryHistory) state.memoryHistory = {};
+  if(!state.memoryBestTimes) state.memoryBestTimes = {};
+  state.memoryHistory[memState.dayNum] = {pairs, timeSec:elapsed, mistakes:memState.mistakes, rating};
+
+  const prevBest = state.memoryBestTimes[pairs];
+  const isNewRecord = (prevBest === undefined) || (elapsed < prevBest);
+  if(isNewRecord) state.memoryBestTimes[pairs] = elapsed;
+  save();
+
+  const m = Math.floor(elapsed/60), s = elapsed%60;
+  const timeStr = `${m}:${s<10?'0':''}${s}`;
+
+  let message, headline;
+  if(isNewRecord && prevBest !== undefined){
+    headline = '🎆 NEW RECORD! 🎆';
+    message = `You finished in ${timeStr} — faster than your best time ever at this level! Joseph's memory is getting SO sharp!`;
+    launchFireworks();
+  } else if(rating === 'fast'){
+    headline = '🌟 Lightning Fast!';
+    message = `${timeStr} with only ${memState.mistakes} ${memState.mistakes===1?'try':'tries'} — amazing focus!`;
+    launchConfetti();
+  } else if(rating === 'slow'){
+    headline = '💪 You Did It!';
+    message = `You finished in ${timeStr}. Memory games get easier with practice — Joseph is building his brain muscles!`;
+    launchConfetti();
+  } else {
+    headline = '🏆 Great Job!';
+    message = `You finished in ${timeStr} with ${memState.mistakes} ${memState.mistakes===1?'try':'tries'}. Nice steady focus!`;
+    launchConfetti();
+  }
+
+  document.getElementById('memWin').innerHTML = `
+    <div class="feedback">${headline}</div>
+    <p class="sub" style="margin-top:4px;">${message}</p>
+    <button class="big-btn green" style="margin-top:10px;" onclick="finishMemory(${memState.dayNum})">Continue ➡️</button>`;
+}
+function launchFireworks(){
+  // A bigger, multi-burst celebration for beating a personal best.
+  launchConfetti();
+  setTimeout(()=>launchConfetti(), 350);
+  setTimeout(()=>launchConfetti(), 700);
 }
 function finishMemory(d){ markSectionComplete(d,'memory'); goto('day',{day:d}); }
 
@@ -1268,7 +1368,7 @@ function parentHTML(){
   <div class="card">
     <h2>📋 Skills Covered (K Review → 1st Grade Stretch)</h2>
     <ul class="fun-list">
-      <li><b>Math:</b> counting/number sense to 20+, addition &amp; subtraction within 20, shapes (2D &amp; 3D), patterns, skip counting by 2s/5s/10s, place value (tens &amp; ones), telling time to the hour/half-hour, measurement, and money (1st grade stretch)</li>
+      <li><b>Math:</b> counting/number sense to 20+, addition &amp; subtraction within 20, shapes (2D &amp; 3D) &amp; colors, patterns, skip counting by 2s/5s/10s, place value (tens &amp; ones), telling time to the hour/half-hour, measurement, and money (1st grade stretch)</li>
       <li><b>Reading:</b> CVC words, rhyming, consonant blends, digraphs, silent-e (CVCe) words, long vowel teams, compound words, contractions, and reading comprehension with literal &amp; inferential questions</li>
       <li><b>Sight words:</b> rotating daily practice across Pre-Primer through 1st grade Dolch word sets</li>
       <li><b>Fine motor:</b> daily handwriting practice tracing sight words</li>
