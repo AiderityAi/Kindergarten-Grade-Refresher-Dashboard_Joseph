@@ -29,8 +29,7 @@
   --white:#FFFFFF;
   --shadow: 0 8px 0 rgba(18,22,58,0.18);
   --radius: 26px;
-  --speed: repeating-linear-gradient(90deg, var(--blue), var(--cyan), var(--gold), var(--red), var(--purple), var(--blue));
-  --block-outline: 3px solid var(--obsidian);
+  --speed: linear-gradient(90deg, var(--blue), var(--cyan), var(--gold), var(--red), var(--purple), var(--blue));
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
@@ -66,6 +65,7 @@ body::after{
 }
 h1,h2,h3,h4,.display{font-family:'Baloo 2',cursive;}
 button{font-family:'Quicksand',sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:4px;}
 .app{
   max-width:900px;margin:0 auto;position:relative;z-index:1;
   padding-top:16px;
@@ -258,7 +258,7 @@ nav.tabs button:active{transform:translateY(2px);}
 @media(max-width:420px){.day-nav-row h2{font-size:16px;}.day-nav-btn{padding:8px 9px;font-size:11px;}}
 .section-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:520px){.section-grid{grid-template-columns:1fr;}}
-.section-card{border-radius:20px;padding:16px;background:#f7faff;border:2px solid #dbe8ff;display:flex;flex-direction:column;gap:8px;position:relative;transition:transform .12s ease;}
+.section-card{width:100%;text-align:left;font:inherit;border-radius:20px;padding:16px;background:#f7faff;border:2px solid #dbe8ff;display:flex;flex-direction:column;gap:8px;position:relative;transition:transform .12s ease;}
 .section-card:active{transform:scale(0.97);}
 .section-card.complete{border-color:var(--green);background:#eefdf2;}
 .section-card .icon{font-size:30px;}
@@ -290,7 +290,7 @@ canvas.trace-canvas{width:100%;max-width:360px;height:260px;background:white;bor
 
 /* Memory match */
 .memgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:420px;margin:0 auto;}
-.memcard{aspect-ratio:1/1;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:24px;color:white;box-shadow:0 4px 0 rgba(18,22,58,0.2);}
+.memcard{width:100%;border:none;font:inherit;aspect-ratio:1/1;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:24px;color:white;box-shadow:0 4px 0 rgba(18,22,58,0.2);}
 .memcard.flipped,.memcard.matched{background:white;color:var(--dark);}
 .memcard.matched{background:linear-gradient(135deg,var(--green),var(--green-deep));color:white;}
 
@@ -738,11 +738,12 @@ function monthHTML(monthNum){
     const locked = d > state.unlockedDay;
     const done = ds.complete;
     const today = d===state.unlockedDay && !done;
+    const statusText = locked ? 'locked' : (done ? 'completed' : (today ? 'today, current day' : 'unlocked'));
     nodes += `<div class="level-node-wrap">
-      <button class="level-node ${done?'done':''} ${today?'today':''} ${locked?'locked':''}" ${locked?'disabled':''} onclick="goto('day',{day:${d}})">
+      <button class="level-node ${done?'done':''} ${today?'today':''} ${locked?'locked':''}" ${locked?'disabled':''} onclick="goto('day',{day:${d}})" aria-label="Day ${d}, ${statusText}">
         <span class="level-node-inner">${done?'⭐':(locked?'🔒':d)}</span>
       </button>
-      <div class="level-node-label">Day ${d}</div>
+      <div class="level-node-label" aria-hidden="true">Day ${d}</div>
     </div>${d<end?'<div class="level-connector"></div>':''}`;
   }
   return `<button class="backbtn" onclick="goto('home')">← Back to World Map</button>
@@ -798,12 +799,12 @@ function dayHTML(d){
   Object.keys(SECTION_META).forEach(key=>{
     const meta = SECTION_META[key];
     const complete = ds[key];
-    cards += `<div class="section-card ${complete?'complete':''}" onclick="goto('${key}',{day:${d}})">
+    cards += `<button class="section-card ${complete?'complete':''}" onclick="goto('${key}',{day:${d}})" aria-label="${meta.title}${complete?' (completed)':''}: ${meta.desc(d)}">
       ${complete?'<div class="check-badge">✅</div>':''}
       <div class="icon">${meta.icon}</div>
       <h3>${meta.title}</h3>
       <p>${meta.desc(d)}</p>
-    </div>`;
+    </button>`;
   });
   const hasPrev = d > 1;
   const hasNext = (d+1) <= state.unlockedDay && (d+1) <= TOTAL_DAYS;
@@ -1434,7 +1435,7 @@ function updateMemTimer(){
 function renderMemGrid(){
   const grid = document.getElementById('memgrid');
   if(!grid) return;
-  grid.innerHTML = memState.cards.map(c=>`<div class="memcard ${c.flipped||c.matched?'flipped':''} ${c.matched?'matched':''}" onclick="flipMem(${c.id})">${(c.flipped||c.matched) ? c.val : '<span style="font-family: Baloo 2, sans-serif; font-weight:800;">?</span>'}</div>`).join('');
+  grid.innerHTML = memState.cards.map(c=>`<button class="memcard ${c.flipped||c.matched?'flipped':''} ${c.matched?'matched':''}" onclick="flipMem(${c.id})" ${c.matched?'disabled':''} aria-label="${c.matched?'Matched card: '+c.val:(c.flipped?'Card showing '+c.val:'Face-down card, tap to flip')}">${(c.flipped||c.matched) ? c.val : '<span style="font-family: Baloo 2, sans-serif; font-weight:800;">?</span>'}</button>`).join('');
   const triesEl = document.getElementById('mem-tries');
   if(triesEl) triesEl.innerText = `🔄 ${memState.mistakes} ${memState.mistakes===1?'try':'tries'}`;
   if(memState.cards.every(c=>c.matched) && !memState.finished){
