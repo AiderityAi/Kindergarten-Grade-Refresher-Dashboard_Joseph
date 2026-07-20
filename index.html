@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1E6FFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Joseph's Turbo Quest Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,10 +29,11 @@
   --white:#FFFFFF;
   --shadow: 0 8px 0 rgba(18,22,58,0.18);
   --radius: 26px;
-  --speed: linear-gradient(90deg, var(--blue), var(--cyan), var(--gold), var(--red), var(--purple), var(--blue));
+  --speed: repeating-linear-gradient(90deg, var(--blue), var(--cyan), var(--gold), var(--red), var(--purple), var(--blue));
+  --block-outline: 3px solid var(--obsidian);
 }
 *{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
+html,body{margin:0;padding:0;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 body{
   font-family:'Quicksand',sans-serif;
   background:
@@ -40,8 +45,10 @@ body{
     var(--cream);
   color:var(--dark);
   min-height:100vh;
+  min-height:100dvh;
   -webkit-tap-highlight-color: transparent;
   position:relative;
+  overflow-x:hidden;
 }
 body::before{
   content:'⭐  🍄  💰  ⚡  🏁  ⭐  🍄  💰  ⚡  🏁';
@@ -58,10 +65,52 @@ body::after{
   pointer-events:none;z-index:0;white-space:pre-wrap;transform:rotate(-6deg);
 }
 h1,h2,h3,h4,.display{font-family:'Baloo 2',cursive;}
-button{font-family:'Quicksand',sans-serif;cursor:pointer;}
-.app{max-width:900px;margin:0 auto;padding:16px 16px 60px;position:relative;z-index:1;}
+button{font-family:'Quicksand',sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.app{
+  max-width:900px;margin:0 auto;position:relative;z-index:1;
+  padding-top:16px;
+  padding-bottom:max(60px, env(safe-area-inset-bottom));
+  padding-left:max(16px, env(safe-area-inset-left));
+  padding-right:max(16px, env(safe-area-inset-right));
+}
 .speed-strip{height:8px;border-radius:8px;background:var(--speed);background-size:200% 100%;margin-bottom:14px;animation:speedmove 5s linear infinite;}
 @keyframes speedmove{0%{background-position:0% 0;}100%{background-position:200% 0;}}
+
+/* ---------- RESPONSIVE: PHONES, TABLETS, IPADS ---------- */
+/* Comfortable, larger-format layout for tablets/iPads in portrait & landscape */
+@media(min-width:700px){
+  .app{padding-top:24px;}
+  .card{padding:28px;}
+  .section-grid{grid-template-columns:1fr 1fr;gap:16px;}
+  .month-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px;}
+  .opt-grid{grid-template-columns:1fr 1fr;gap:16px;}
+  .stage{padding:32px;}
+}
+@media(min-width:1000px){
+  .app{max-width:960px;}
+}
+/* Short/landscape viewports (phones rotated, small tablets) — trim vertical padding
+   so key controls (options, buttons) stay reachable without excess scrolling */
+@media(max-height:480px) and (orientation:landscape){
+  .app{padding-top:8px;}
+  .card{padding:14px;}
+  .stage{padding:14px;}
+  .mascot-row{margin:2px 0 10px;}
+  .mascot-row span{width:48px;height:48px;font-size:26px;}
+  .flash-emoji{font-size:56px;}
+  .flash-big-letter{font-size:64px;}
+}
+/* Extra-small phones (SE-class, ~360px and under) */
+@media(max-width:360px){
+  .card{padding:16px;}
+  .big-btn{font-size:15px;padding:14px 16px;}
+  .flash-big-letter{font-size:76px;}
+}
+/* Ensure every tappable control meets a comfortable minimum touch target */
+.big-btn,.small-btn,.day-nav-btn,.opt-btn,.backbtn,nav.tabs button,.month-card,.level-node{min-height:44px;}
+input[type="checkbox"]{min-width:22px;min-height:22px;}
+/* Prevent iOS Safari from auto-zooming when a text field is focused */
+textarea,input[type="text"],input[type="checkbox"]{font-size:16px;}
 
 /* ---------- HEADER / NAV ---------- */
 .topbar{
@@ -1564,12 +1613,12 @@ function videoHTML(d){
 
     <div style="margin-top:18px;">
       <p style="font-weight:700;">What was the trick they used?</p>
-      <textarea rows="2" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:14px;" placeholder="Type what Joseph remembers..." onchange="saveVideoAnswer(${d},'q2',this.value)">${notes.q2||''}</textarea>
+      <textarea rows="2" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:16px;" placeholder="Type what Joseph remembers..." onchange="saveVideoAnswer(${d},'q2',this.value)">${notes.q2||''}</textarea>
     </div>
 
     <div style="margin-top:16px;">
       <p style="font-weight:700;">Can you explain it back to me?</p>
-      <textarea rows="3" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:14px;" placeholder="Type Joseph's explanation here..." onchange="saveVideoAnswer(${d},'q3',this.value)">${notes.q3||''}</textarea>
+      <textarea rows="3" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:16px;" placeholder="Type Joseph's explanation here..." onchange="saveVideoAnswer(${d},'q3',this.value)">${notes.q3||''}</textarea>
     </div>
 
     <button class="big-btn blue" style="margin-top:18px;" onclick="finishVideoActivity(${d})" ${bothWatched?'':'disabled'}>✅ Finished Video Learning!</button>
