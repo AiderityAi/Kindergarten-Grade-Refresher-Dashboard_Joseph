@@ -10,7 +10,7 @@
 <title>Joseph's Turbo Quest Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&family=Andika:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --blue:#1E6FFF;
@@ -23,13 +23,30 @@
   --green:#22B24C;
   --green-deep:#178A38;
   --purple:#7B4FE0;
+  --brown:#8B5A2B;
+  --obsidian:#1B1F3B;
   --dark:#12163A;
   --dark-soft:#4A5080;
   --cream:#F2F7FF;
   --white:#FFFFFF;
   --shadow: 0 8px 0 rgba(18,22,58,0.18);
   --radius: 26px;
-  --speed: linear-gradient(90deg, var(--blue), var(--cyan), var(--gold), var(--red), var(--purple), var(--blue));
+  --speed: repeating-linear-gradient(
+    90deg,
+    var(--green)      0   8%,
+    var(--green-deep) 8%  16%,
+    var(--blue)        16% 24%,
+    var(--blue-deep)   24% 32%,
+    var(--gold)         32% 40%,
+    var(--brown)        40% 48%,
+    var(--red)           48% 56%,
+    var(--purple)        56% 64%,
+    var(--cyan)           64% 72%,
+    var(--obsidian)        72% 80%,
+    var(--green)            80% 88%,
+    var(--blue)              88% 96%,
+    var(--gold)               96% 100%
+  );
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
@@ -122,10 +139,10 @@ textarea,input[type="text"],input[type="checkbox"]{font-size:16px;}
   box-shadow:var(--shadow);
   margin-bottom:16px;
   gap:10px;flex-wrap:wrap;
-  position:relative;overflow:hidden;
+  position:relative;
 }
 .topbar::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:7px;
+  content:'';position:absolute;top:0;left:0;right:0;height:7px;border-radius:24px 24px 0 0;
   background:var(--speed);background-size:200% 100%;animation:speedmove 5s linear infinite;
 }
 .brand{display:flex;align-items:center;gap:10px;}
@@ -162,11 +179,15 @@ nav.tabs button:active{transform:translateY(2px);}
 /* ---------- CARDS ---------- */
 .card{
   background:var(--white);border-radius:var(--radius);padding:22px;
-  box-shadow:var(--shadow);margin-bottom:18px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow);margin-bottom:18px;position:relative;
   border:3px solid #e4edff;
 }
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:var(--speed);background-size:200% 100%;animation:speedmove 6s linear infinite;}
-.card::after{content:'⭐';position:absolute;top:14px;right:16px;font-size:22px;opacity:0.45;transform:rotate(12deg);}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:6px;border-radius:var(--radius) var(--radius) 0 0;
+  background:var(--speed);background-size:200% 100%;animation:speedmove 6s linear infinite;
+  border-bottom:2px solid var(--obsidian);
+}
+.card::after{content:'⭐';position:absolute;top:38px;right:38px;font-size:22px;opacity:0.45;transform:rotate(12deg);}
 .card h2{margin:0 0 4px;font-size:24px;}
 .card .sub{color:var(--dark-soft);font-size:14px;margin-bottom:14px;font-weight:600;}
 .big-btn{
@@ -182,6 +203,26 @@ nav.tabs button:active{transform:translateY(2px);}
 .big-btn.purple{background:linear-gradient(135deg,var(--purple),#5b34b8);box-shadow:0 5px 0 rgba(91,52,184,0.4);}
 .big-btn:disabled{opacity:0.4;box-shadow:none;transform:none;}
 .pill{display:inline-block;padding:5px 12px;border-radius:14px;font-size:12px;font-weight:800;background:#eaf1ff;color:var(--blue-deep);}
+.dictate-row{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;}
+.dictate-row textarea{flex:1;min-width:180px;}
+.mic-btn{
+  flex:0 0 auto;border:none;border-radius:14px;padding:10px 14px;font-weight:800;font-size:13px;
+  background:linear-gradient(135deg,var(--red),var(--red-deep));color:white;font-family:'Baloo 2',cursive;
+  box-shadow:0 4px 0 rgba(196,30,23,0.4);min-height:44px;white-space:nowrap;
+}
+.mic-btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(196,30,23,0.4);}
+.mic-btn.listening{animation:micpulse 1s ease-in-out infinite;}
+@keyframes micpulse{0%,100%{box-shadow:0 4px 0 rgba(196,30,23,0.4),0 0 0 0 rgba(238,59,50,0.5);}50%{box-shadow:0 4px 0 rgba(196,30,23,0.4),0 0 0 8px rgba(238,59,50,0);}}
+.mic-hint{font-size:12px;font-weight:700;color:var(--dark-soft);margin-top:6px;min-height:16px;}
+@media(max-width:480px){.dictate-row{flex-direction:column;}.dictate-row textarea{width:100%;}.mic-btn{width:100%;}}
+.read-aloud-btn{
+  display:inline-flex;align-items:center;gap:6px;margin-left:8px;
+  border:2px solid var(--gold);border-radius:16px;padding:6px 14px;
+  background:linear-gradient(135deg,#fff9e0,#ffedb0);color:#7a5b00;
+  font-weight:800;font-size:13px;font-family:'Baloo 2',cursive;
+  box-shadow:0 3px 0 rgba(224,164,0,0.3);min-height:44px;
+}
+.read-aloud-btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(224,164,0,0.3);}
 
 /* ---------- HOME / MONTH MAP / LEVEL PATH ---------- */
 .hero-card{background:linear-gradient(160deg,#fff9ec,#eaf3ff 60%,#ffeef2);}
@@ -218,7 +259,7 @@ nav.tabs button:active{transform:translateY(2px);}
 @keyframes pulseglow{0%,100%{box-shadow:0 5px 0 rgba(224,164,0,0.35),0 0 0 4px rgba(255,199,44,0.25);}50%{box-shadow:0 5px 0 rgba(224,164,0,0.35),0 0 0 9px rgba(255,199,44,0.08);}}
 .month-card.complete{border-color:var(--green);background:linear-gradient(160deg,#f1fdf6,#e3faec);}
 .month-card.locked{opacity:0.5;filter:grayscale(0.4);}
-.month-trophy{position:absolute;top:-14px;right:-8px;font-size:26px;transform:rotate(12deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,0.2));}
+.month-trophy{position:absolute;top:-10px;right:-6px;font-size:24px;transform:rotate(12deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,0.2));z-index:2;}
 .month-emoji{font-size:38px;}
 .month-num{font-family:'Baloo 2',cursive;font-weight:800;font-size:12px;color:var(--blue-deep);letter-spacing:0.5px;text-transform:uppercase;}
 .month-title{font-family:'Baloo 2',cursive;font-weight:700;font-size:14px;text-align:center;line-height:1.15;min-height:32px;}
@@ -267,8 +308,8 @@ nav.tabs button:active{transform:translateY(2px);}
 .check-badge{position:absolute;top:10px;right:10px;font-size:20px;}
 
 /* ---------- FLASHCARD / GAME AREA ---------- */
-.stage{border-radius:24px;padding:24px;text-align:center;background:linear-gradient(160deg,#eaf3ff,#fff7e0 55%,#ffecec);border:3px dashed #b9d3ff;position:relative;overflow:hidden;}
-.stage::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--speed);background-size:200% 100%;animation:speedmove 5s linear infinite;}
+.stage{border-radius:24px;padding:24px;text-align:center;background:linear-gradient(160deg,#eaf3ff,#fff7e0 55%,#ffecec);border:3px dashed #b9d3ff;position:relative;}
+.stage::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;border-radius:24px 24px 0 0;background:var(--speed);background-size:200% 100%;animation:speedmove 5s linear infinite;border-bottom:2px solid var(--obsidian);}
 .flash-emoji{font-size:90px;line-height:1;margin-bottom:6px;}
 .flash-big-letter{font-family:'Baloo 2',cursive;font-size:100px;font-weight:800;background:linear-gradient(135deg,var(--blue-deep),var(--red-deep));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;}
 .flash-caption{font-size:20px;font-weight:700;margin-top:6px;}
@@ -295,9 +336,9 @@ canvas.trace-canvas{width:100%;max-width:360px;height:260px;background:white;bor
 .memcard.matched{background:linear-gradient(135deg,var(--green),var(--green-deep));color:white;}
 
 /* Reading corner */
-.book-cover{width:100%;border-radius:18px;background:linear-gradient(135deg,#dbe8ff,#fff2c9 55%,#ffdada);padding:24px;text-align:center;margin-bottom:14px;border:3px solid #b9d3ff;position:relative;overflow:hidden;}
-.book-cover::before{content:'⭐';position:absolute;top:8px;left:12px;font-size:22px;opacity:0.6;}
-.book-cover::after{content:'💰';position:absolute;top:8px;right:12px;font-size:22px;opacity:0.6;}
+.book-cover{width:100%;border-radius:18px;background:linear-gradient(135deg,#dbe8ff,#fff2c9 55%,#ffdada);padding:24px;text-align:center;margin-bottom:14px;border:3px solid #b9d3ff;position:relative;}
+.book-cover::before{content:'⭐';position:absolute;top:24px;left:26px;font-size:22px;opacity:0.6;}
+.book-cover::after{content:'💰';position:absolute;top:24px;right:26px;font-size:22px;opacity:0.6;}
 .book-cover .emoji{font-size:56px;}
 .vocab-chip{display:inline-block;background:#eafaf0;color:#1d7a4a;border-radius:12px;padding:6px 12px;font-weight:700;font-size:13px;margin:4px 4px 0 0;border:1px solid #c9f2d8;}
 ul.fun-list{padding-left:18px;margin:6px 0;}
@@ -608,6 +649,62 @@ function bookForDay(d){ return BOOKS.find(b=>b.days.includes(d)) || BOOKS[0]; }
 function shuffle(arr){ return arr.slice().sort(()=>Math.random()-0.5); }
 function pickDistinct(pool, exclude, n){ const filtered = pool.filter(x=>String(x)!==String(exclude)); return shuffle(filtered).slice(0,n); }
 function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+/* =========================================================
+   READ-ALOUD (Text-to-Speech)
+   Lets Joseph hear the directions for any activity or the current
+   question read out loud, so he always knows exactly what to do
+   even before he's reading independently.
+   ========================================================= */
+function stripForSpeech(html){
+  return String(html)
+    .replace(/<[^>]*>/g, ' ')      // drop HTML tags
+    .replace(/&amp;/g, 'and')
+    .replace(/&[a-z]+;/g, ' ')     // drop other HTML entities
+    .replace(/[⭐🌟🎯🏆🚀🎮🔤🔢⚡🎬🏁💰🍄🦔🎀🌈🧁🍎🐛🍭]/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s[+\-](?=\s*[.!?]|\s*$)/g, '')  // drop a stray +/- left dangling after emoji removal
+    .trim();
+}
+function speakText(text){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.88;
+    utter.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+    const preferred = voices.find(v => /en(-|_)US/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
+    if(preferred) utter.voice = preferred;
+    window.speechSynthesis.speak(utter);
+  }catch(e){ /* speech synthesis unsupported or blocked — fail silently */ }
+}
+const ACTIVITY_INTROS = {
+  math:   'Math Mission time!',
+  reading:'Phonics Power-Up time!',
+  sight:  "Let's read this sight word.",
+  ninja:  'Number Ninja time! Sharpen your number sense.',
+  quiz:   'Boss Quiz time! Show what you know.'
+};
+function speakCurrentCard(activityKey){
+  const st = engineState;
+  if(!st || !st.deck || !st.deck[st.idx]) return;
+  const item = st.deck[st.idx];
+  const intro = ACTIVITY_INTROS[activityKey] || "Let's go!";
+  const question = stripForSpeech(item.stageHTML);
+  speakText(`${intro} ${question}. Pick the correct answer.`);
+}
+function speakWritingDirections(){
+  if(!writeState || !writeState.words) return;
+  const w = writeState.words[writeState.idx];
+  const kind = w.length <= 2 ? 'letter' : 'word';
+  speakText(`Trace each word carefully. Trace the ${kind} "${w}".`);
+}
+function speakSimple(text){ speakText(text); }
+function readAloudButtonHTML(onclickJs, label){
+  return `<button class="read-aloud-btn" type="button" onclick="${onclickJs}" aria-label="${label || 'Read the directions out loud'}">🔊 Read Aloud</button>`;
+}
+
 function launchConfetti(){
   const colors=['#1E6FFF','#00D4FF','#FFC72C','#EE3B32','#7B4FE0','#22B24C'];
   for(let i=0;i<36;i++){
@@ -630,6 +727,7 @@ var view = 'home';
 var ctx = {};
 function goto(v, c={}){
   if(memState && memState.timerId && !memState.finished){ clearInterval(memState.timerId); memState.timerId = null; }
+  if(activeRecognition){ try{ activeRecognition.stop(); }catch(e){} activeRecognition = null; }
   view=v; ctx=c; render(); window.scrollTo({top:0,behavior:'smooth'});
 }
 function render(overrideView, overrideCtx){
@@ -872,12 +970,26 @@ function answerEngine(i){
     st.tries++;
     if(st.tries >= 4){
       st.locked = true;
-      feedArea.innerHTML = `<div class="hint-box">💪 Great effort! Here's the answer: <b>${item.options.find(o=>o.correct).label}</b><br>${item.explain}</div>
+      feedArea.innerHTML = `<div class="hint-box">💪 Great effort! Here's the answer: <b>${item.options.find(o=>o.correct).label}</b><br>${item.explain}
+      <div style="margin-top:8px;">${readAloudButtonHTML('speakCurrentHint()', 'Read the answer out loud')}</div></div>
       <button class="big-btn green" style="margin-top:12px;" onclick="engineConfirm()">Got it! Keep going ➡️</button>`;
     } else {
-      feedArea.innerHTML = `<div class="hint-box">💡 Hint ${st.tries}: ${item.hints[Math.min(st.tries-1, item.hints.length-1)]}</div>`;
+      feedArea.innerHTML = `<div class="hint-box">💡 Hint ${st.tries}: ${item.hints[Math.min(st.tries-1, item.hints.length-1)]}
+      <div style="margin-top:8px;">${readAloudButtonHTML('speakCurrentHint()', 'Read this hint out loud')}</div></div>`;
       document.getElementById('engine-dots').innerHTML = [0,1,2,3].map(i=>`<span class="${i < st.tries ? 'used':''}"></span>`).join('');
     }
+  }
+}
+function speakCurrentHint(){
+  const st = engineState;
+  if(!st || !st.deck || !st.deck[st.idx]) return;
+  const item = st.deck[st.idx];
+  if(st.tries >= 4){
+    const correctLabel = item.options.find(o=>o.correct).label;
+    speakText(`Here's the answer: ${stripForSpeech(correctLabel)}. ${stripForSpeech(item.explain)}`);
+  } else if(st.tries >= 1){
+    const hintText = item.hints[Math.min(st.tries-1, item.hints.length-1)];
+    speakText(`Hint ${st.tries}: ${stripForSpeech(hintText)}`);
   }
 }
 function engineConfirm(){
@@ -886,9 +998,10 @@ function engineConfirm(){
   if(st.idx >= st.deck.length){ if(st.onDeckComplete) st.onDeckComplete(); }
   else { renderEngineCard(); }
 }
-function engineFrameHTML(tag){
+function engineFrameHTML(tag, activityKey){
   return `<div class="stage">
     <div class="pill">${tag}</div>
+    ${readAloudButtonHTML(`speakCurrentCard('${activityKey}')`, 'Read this question out loud')}
     <div id="engine-progress" class="sub" style="margin-top:8px;">Card 1</div>
     <div id="engine-stage" style="margin:14px 0;"></div>
     <div class="opt-grid" id="engine-opts"></div>
@@ -904,7 +1017,7 @@ function mathHTML(d){
   const topic = focusForDay(d).mathTopic;
   return activityHeader(d, `🔢 Math Mission: ${mathTopicLabel(topic)}`) +
     `<p class="sub">Race through 3 levels — each one gets a little trickier!</p>
-    ${engineFrameHTML(mathTopicLabel(topic))}
+    ${engineFrameHTML(mathTopicLabel(topic), 'math')}
     </div>`;
 }
 function numOptions(correct, spread){
@@ -1045,7 +1158,7 @@ function readingPhonicsHTML(d){
   const topic = focusForDay(d).readTopic;
   return activityHeader(d, `🔤 Phonics Power-Up: ${readTopicLabel(topic)}`) +
     `<p class="sub">Level up your reading skills!</p>
-    ${engineFrameHTML(readTopicLabel(topic))}
+    ${engineFrameHTML(readTopicLabel(topic), 'reading')}
     </div>`;
 }
 function buildReadingDeck(d){
@@ -1176,7 +1289,7 @@ function buildReadingDeck(d){
 function sightHTML(d){
   return activityHeader(d, `⚡ Sight Word Sprint`) +
     `<p class="sub">Speed-read today's sight words!</p>
-    ${engineFrameHTML('Sight Words')}
+    ${engineFrameHTML('Sight Words', 'sight')}
     </div>`;
 }
 function buildSightDeck(d){
@@ -1199,7 +1312,7 @@ function buildSightDeck(d){
 function ninjaHTML(d){
   return activityHeader(d, `🎯 Number Ninja`) +
     `<p class="sub">Sharpen your number sense with a quick drill!</p>
-    ${engineFrameHTML('Number Ninja')}
+    ${engineFrameHTML('Number Ninja', 'ninja')}
     </div>`;
 }
 function buildNinjaDeck(d){
@@ -1222,6 +1335,7 @@ function writeHTML(d){
   `<p class="sub">Trace each word carefully — aim for 95-100% accuracy to earn a gold star on every word!</p>
   <div class="stage">
     <div class="pill" id="write-progress">Word 1 of ${words.length}</div>
+    ${readAloudButtonHTML(`speakWritingDirections()`, 'Read the tracing directions out loud')}
     <div class="flash-caption" id="write-word-label" style="margin-top:8px;"></div>
     <canvas class="trace-canvas" id="traceCanvas" width="360" height="260"></canvas>
     <div class="trace-controls">
@@ -1239,12 +1353,12 @@ function initTraceCanvas(d){
   window._traceCanvas = canvas;
 
   function currentWord(){ return writeState.words[writeState.idx]; }
-  function fontSizeFor(word){ return word.length > 6 ? 46 : (word.length > 4 ? 60 : 84); }
+  function fontSizeFor(word){ return word.length > 6 ? 50 : (word.length > 4 ? 64 : 88); }
   function drawGuide(){
     const word = currentWord();
     ctx2d.clearRect(0,0,canvas.width,canvas.height);
-    ctx2d.font = `bold ${fontSizeFor(word)}px "Baloo 2", sans-serif`;
-    ctx2d.fillStyle = '#dbe8ff';
+    ctx2d.font = `400 ${fontSizeFor(word)}px "Andika", sans-serif`;
+    ctx2d.fillStyle = '#c3d4f5';
     ctx2d.textAlign='center';
     ctx2d.textBaseline='middle';
     ctx2d.fillText(word, canvas.width/2, canvas.height/2+10);
@@ -1285,7 +1399,12 @@ function loadWriteWord(){
   if(labelEl) labelEl.innerText = `Trace: "${w}"`;
   if(feedEl) feedEl.innerHTML = '';
   writeState.attempts = 0;
-  if(window._drawTraceGuide) window._drawTraceGuide();
+  const draw = () => { if(window._drawTraceGuide) window._drawTraceGuide(); };
+  if(document.fonts && document.fonts.load){
+    document.fonts.load('400 80px "Andika"').then(draw).catch(draw);
+  } else {
+    draw();
+  }
 }
 /* Pixel-based accuracy check: renders the guide word to an offscreen
    canvas, compares it against the child's ink strokes, and scores both
@@ -1296,7 +1415,7 @@ function computeTraceAccuracy(canvas, word, fontSize){
   const guideCanvas = document.createElement('canvas');
   guideCanvas.width = w; guideCanvas.height = h;
   const gctx = guideCanvas.getContext('2d');
-  gctx.font = `bold ${fontSize}px "Baloo 2", sans-serif`;
+  gctx.font = `400 ${fontSize}px "Andika", sans-serif`;
   gctx.textAlign='center'; gctx.textBaseline='middle';
   gctx.fillStyle = '#000';
   gctx.fillText(word, w/2, h/2+10);
@@ -1355,18 +1474,29 @@ function checkTrace(d){
   writeState.attempts++;
   const feedEl = document.getElementById('write-feedback');
   if(result.score >= 95){
-    feedEl.innerHTML = `<div class="hint-box" style="background:#eafaf0;border-color:#b8f0cf;color:#1d7a4a;">🌟 Amazing! ${result.score}% accuracy — that's a perfect trace!</div>
+    writeState.lastFeedbackText = `Amazing! ${result.score}% accuracy — that's a perfect trace!`;
+    feedEl.innerHTML = `<div class="hint-box" style="background:#eafaf0;border-color:#b8f0cf;color:#1d7a4a;">🌟 Amazing! ${result.score}% accuracy — that's a perfect trace!
+    <div style="margin-top:8px;">${readAloudButtonHTML('speakWriteFeedback()', 'Read this out loud')}</div></div>
     <button class="big-btn green" style="margin-top:10px;width:auto;" onclick="nextWriteWord(${d})">Next Word ➡️</button>`;
   } else if(result.score >= 90){
-    feedEl.innerHTML = `<div class="hint-box" style="background:#eafaf0;border-color:#b8f0cf;color:#1d7a4a;">🎉 Great job! ${result.score}% accuracy — nice tracing!</div>
+    writeState.lastFeedbackText = `Great job! ${result.score}% accuracy — nice tracing!`;
+    feedEl.innerHTML = `<div class="hint-box" style="background:#eafaf0;border-color:#b8f0cf;color:#1d7a4a;">🎉 Great job! ${result.score}% accuracy — nice tracing!
+    <div style="margin-top:8px;">${readAloudButtonHTML('speakWriteFeedback()', 'Read this out loud')}</div></div>
     <button class="big-btn green" style="margin-top:10px;width:auto;" onclick="nextWriteWord(${d})">Next Word ➡️</button>`;
   } else if(writeState.attempts >= 3){
-    feedEl.innerHTML = `<div class="hint-box">💪 Nice effort — ${result.score}% this time! Let's move on and we'll practice this word again soon.</div>
+    writeState.lastFeedbackText = `Nice effort — ${result.score}% this time! Let's move on and we'll practice this word again soon.`;
+    feedEl.innerHTML = `<div class="hint-box">💪 Nice effort — ${result.score}% this time! Let's move on and we'll practice this word again soon.
+    <div style="margin-top:8px;">${readAloudButtonHTML('speakWriteFeedback()', 'Read this out loud')}</div></div>
     <button class="big-btn green" style="margin-top:10px;width:auto;" onclick="nextWriteWord(${d})">Continue ➡️</button>`;
   } else {
-    feedEl.innerHTML = `<div class="hint-box">✏️ You got ${result.score}% — so close! Trace slowly, right on top of the pale letters. (Attempt ${writeState.attempts} of 3)</div>
+    writeState.lastFeedbackText = `You got ${result.score}% — so close! Trace slowly, right on top of the pale letters.`;
+    feedEl.innerHTML = `<div class="hint-box">✏️ You got ${result.score}% — so close! Trace slowly, right on top of the pale letters. (Attempt ${writeState.attempts} of 3)
+    <div style="margin-top:8px;">${readAloudButtonHTML('speakWriteFeedback()', 'Read this out loud')}</div></div>
     <button class="small-btn" style="margin-top:10px;" onclick="clearTrace()">🧽 Clear &amp; Try Again</button>`;
   }
+}
+function speakWriteFeedback(){
+  if(writeState && writeState.lastFeedbackText) speakText(stripForSpeech(writeState.lastFeedbackText));
 }
 function nextWriteWord(d){
   writeState.idx++;
@@ -1404,7 +1534,8 @@ function memoryHTML(d){
   return activityHeader(d, `🧠 Memory Match`) +
   `<p class="sub">Flip two cards and find the matching pairs — try to beat your best time!</p>
   <div class="stage">
-    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+    ${readAloudButtonHTML(`speakSimple('Flip two cards and find the matching pairs. Try to beat your best time!')`, 'Read the directions out loud')}
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;margin-top:10px;">
       <div class="pill" id="mem-timer">⏱️ 0:00</div>
       <div class="pill" id="mem-tries" style="background:#ffe9d6;color:#b5540a;">🔄 0 tries</div>
     </div>
@@ -1524,7 +1655,7 @@ function finishMemory(d){ markSectionComplete(d,'memory'); goto('day',{day:d}); 
 function quizHTML(d){
   return activityHeader(d, `🏆 Boss Quiz`) +
     `<p class="sub">Beat today's boss level with everything you learned!</p>
-    ${engineFrameHTML('Boss Quiz')}
+    ${engineFrameHTML('Boss Quiz', 'quiz')}
     </div>`;
 }
 function buildQuizDeck(d){
@@ -1565,7 +1696,8 @@ function storyHTML(dOrNull){
   }
   return activityHeader(d, `📖 Story Time`) +
   `<div class="book-cover"><div class="emoji">${book.emoji}</div><h3 style="margin:6px 0 2px;">${book.title}</h3><p class="sub" style="margin:0;">by ${book.author}</p></div>
-  <div class="hint-box" style="text-align:left;">
+  ${readAloudButtonHTML(`speakStoryPage(${d})`, 'Read this page out loud')}
+  <div class="hint-box" style="text-align:left;margin-top:10px;">
     🎬 <b>Watch a read-aloud together:</b> <a href="${book.videoUrl}" target="_blank" rel="noopener">${book.videoLabel}</a><br>
     <span style="font-size:12px;">(Please preview with Joseph — every video is picked from a kid-focused read-aloud channel, but it's always good to watch together!)</span><br><br>
     📱 <b>Want the real book?</b> Borrow the ebook or audiobook free from your local library using the <b>Libby</b> app (by OverDrive) — just search "${book.title}."
@@ -1574,6 +1706,23 @@ function storyHTML(dOrNull){
   <div style="margin-top:10px;">${body}</div>
   <button class="big-btn gold" style="margin-top:18px;" onclick="markSectionComplete(${d},'story'); goto('day',{day:${d}});">✅ Finished Story Time!</button>
   </div>`;
+}
+function speakStoryPage(d){
+  const book = bookForDay(d);
+  const dayIdxInBook = book.days.indexOf(d);
+  const stageOptions = ['Picture Walk', 'Vocabulary', 'Favorite Moment', 'Discussion'];
+  const stageTitle = stageOptions[dayIdxInBook % stageOptions.length];
+  let bodyText = '';
+  if(stageTitle === 'Picture Walk'){
+    bodyText = `${book.summary} Try this: ${book.activity}`;
+  } else if(stageTitle === 'Vocabulary'){
+    bodyText = `New words to learn: ${book.vocab.join(', ')}. Fun facts: ${book.funFacts.join(' ')}`;
+  } else if(stageTitle === 'Favorite Moment'){
+    bodyText = `Our favorite moment: ${book.moment} Big idea: ${book.lesson}`;
+  } else {
+    bodyText = `Let's talk about it! ${book.discussion.join(' ')}`;
+  }
+  speakText(`Story Time. ${book.title}, by ${book.author}. ${stageTitle}. ${stripForSpeech(bodyText)}`);
 }
 
 /* =========================================================
@@ -1614,12 +1763,20 @@ function videoHTML(d){
 
     <div style="margin-top:18px;">
       <p style="font-weight:700;">What was the trick they used?</p>
-      <textarea rows="2" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:16px;" placeholder="Type what Joseph remembers..." onchange="saveVideoAnswer(${d},'q2',this.value)">${notes.q2||''}</textarea>
+      <div class="dictate-row">
+        <textarea id="q2-${d}" rows="2" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:16px;" placeholder="Type what Joseph remembers..." onchange="saveVideoAnswer(${d},'q2',this.value)">${notes.q2||''}</textarea>
+        <button type="button" class="mic-btn" id="mic-q2-${d}" onclick="startDictation(${d},'q2')" aria-label="Speak your answer instead of typing">🎤 Speak</button>
+      </div>
+      <div class="mic-hint" id="mic-hint-q2-${d}"></div>
     </div>
 
     <div style="margin-top:16px;">
       <p style="font-weight:700;">Can you explain it back to me?</p>
-      <textarea rows="3" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:16px;" placeholder="Type Joseph's explanation here..." onchange="saveVideoAnswer(${d},'q3',this.value)">${notes.q3||''}</textarea>
+      <div class="dictate-row">
+        <textarea id="q3-${d}" rows="3" style="width:100%;border-radius:12px;border:2px solid #dbe8ff;padding:10px;font-family:'Quicksand',sans-serif;font-size:16px;" placeholder="Type Joseph's explanation here..." onchange="saveVideoAnswer(${d},'q3',this.value)">${notes.q3||''}</textarea>
+        <button type="button" class="mic-btn" id="mic-q3-${d}" onclick="startDictation(${d},'q3')" aria-label="Speak your answer instead of typing">🎤 Speak</button>
+      </div>
+      <div class="mic-hint" id="mic-hint-q3-${d}"></div>
     </div>
 
     <button class="big-btn blue" style="margin-top:18px;" onclick="finishVideoActivity(${d})" ${bothWatched?'':'disabled'}>✅ Finished Video Learning!</button>
@@ -1642,6 +1799,79 @@ function saveVideoAnswer(d, key, value){
 function finishVideoActivity(d){
   markSectionComplete(d, 'video');
   goto('day', {day:d});
+}
+
+/* =========================================================
+   VOICE-TO-TEXT DICTATION for Video Learning notes
+   Lets Joseph speak his answer instead of typing it — the
+   words appear live in the box and save automatically when
+   he's done talking. Falls back gracefully with a friendly
+   tip on browsers (like iOS Safari) that don't support the
+   SpeechRecognition API, pointing to the keyboard's built-in
+   dictation mic instead.
+   ========================================================= */
+var activeRecognition = null;
+function startDictation(d, key){
+  const textarea = document.getElementById(`${key}-${d}`);
+  const micBtn = document.getElementById(`mic-${key}-${d}`);
+  const hintEl = document.getElementById(`mic-hint-${key}-${d}`);
+  if(!textarea || !micBtn) return;
+
+  // If already listening, tapping again stops it early.
+  if(activeRecognition){
+    activeRecognition.stop();
+    return;
+  }
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    if(hintEl) hintEl.innerHTML = `💡 Voice typing isn't available in this browser. Try tapping the microphone icon on your keyboard instead!`;
+    return;
+  }
+
+  try{
+    const recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    activeRecognition = recognition;
+
+    const baseText = textarea.value ? textarea.value.trim() + ' ' : '';
+    micBtn.classList.add('listening');
+    micBtn.innerHTML = '🔴 Listening…';
+    if(hintEl) hintEl.innerHTML = `🎙️ Speak now — tap the button again to stop.`;
+
+    recognition.onresult = function(event){
+      let transcript = '';
+      for(let i=0; i<event.results.length; i++){
+        transcript += event.results[i][0].transcript;
+      }
+      textarea.value = baseText + transcript;
+    };
+    recognition.onerror = function(event){
+      if(hintEl){
+        if(event.error === 'not-allowed' || event.error === 'permission-denied'){
+          hintEl.innerHTML = `💡 Microphone access was blocked. Please allow microphone permission to use Speak.`;
+        } else if(event.error === 'no-speech'){
+          hintEl.innerHTML = `💡 Didn't catch that — tap 🎤 Speak and try again.`;
+        } else {
+          hintEl.innerHTML = `💡 Voice typing had a hiccup — you can always type instead!`;
+        }
+      }
+    };
+    recognition.onend = function(){
+      micBtn.classList.remove('listening');
+      micBtn.innerHTML = '🎤 Speak';
+      activeRecognition = null;
+      saveVideoAnswer(d, key, textarea.value);
+    };
+    recognition.start();
+  }catch(e){
+    if(hintEl) hintEl.innerHTML = `💡 Voice typing isn't available right now. Please type your answer instead.`;
+    micBtn.classList.remove('listening');
+    micBtn.innerHTML = '🎤 Speak';
+    activeRecognition = null;
+  }
 }
 
 /* =========================================================
