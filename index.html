@@ -661,20 +661,42 @@ function stripForSpeech(html){
     .replace(/<[^>]*>/g, ' ')      // drop HTML tags
     .replace(/&amp;/g, 'and')
     .replace(/&[a-z]+;/g, ' ')     // drop other HTML entities
-    .replace(/[⭐🌟🎯🏆🚀🎮🔤🔢⚡🎬🏁💰🍄🦔🎀🌈🧁🍎🐛🍭]/g, '')
+    .replace(/\p{Extended_Pictographic}/gu, '')  // strip ALL emoji, not just a hand-picked list
+    .replace(/\uFE0F/g, '')        // strip variation-selector byte some emoji leave behind
     .replace(/\s+/g, ' ')
     .replace(/\s[+\-](?=\s*[.!?]|\s*$)/g, '')  // drop a stray +/- left dangling after emoji removal
     .trim();
+}
+function pickPreferredVoice(voices){
+  if(!voices || !voices.length) return null;
+  // Ranked from most natural/kid-friendly sounding to most generic.
+  // Modern "Natural"/neural voices (Edge, Chrome, Safari) sound far less
+  // robotic than default system voices, so we look for those by name first.
+  const nameRank = [
+    /Natural/i,
+    /Google US English/i,
+    /Samantha/i,
+    /Aria/i,
+    /Jenny/i,
+    /Nova/i,
+    /Zira/i,
+    /Female/i
+  ];
+  for(const pattern of nameRank){
+    const match = voices.find(v => pattern.test(v.name));
+    if(match) return match;
+  }
+  return voices.find(v => /en(-|_)US/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang)) || null;
 }
 function speakText(text){
   try{
     if(!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 0.88;
-    utter.pitch = 1.05;
+    utter.rate = 0.94;
+    utter.pitch = 1.2;
     const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
-    const preferred = voices.find(v => /en(-|_)US/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
+    const preferred = pickPreferredVoice(voices);
     if(preferred) utter.voice = preferred;
     window.speechSynthesis.speak(utter);
   }catch(e){ /* speech synthesis unsupported or blocked — fail silently */ }
@@ -686,19 +708,57 @@ const ACTIVITY_INTROS = {
   ninja:  'Number Ninja time! Sharpen your number sense.',
   quiz:   'Boss Quiz time! Show what you know.'
 };
+function currentActivityKey(){
+  const st = engineState;
+  return (st && st.deckId) ? st.deckId.split('-')[0] : '';
+}
+// Sounds a word out letter-by-letter (with brief pauses) before saying the
+// whole word — helps a pre-reader connect the letters they see to the
+// word they're choosing, instead of just hearing the word spoken normally.
+function spellOutForSpeech(label){
+  const clean = stripForSpeech(label);
+  const lettersOnly = clean.replace(/[^a-zA-Z]/g, '');
+  if(!lettersOnly || lettersOnly.length > 12) return clean; // skip spelling out long phrases
+  const spelled = lettersOnly.split('').join(', ');
+  return `${spelled}... ${clean}`;
+}
+// For a set of multiple-choice options, reads each one aloud so a child who
+// can't read the buttons yet still knows what each choice says. Word-based
+// options get letter-by-letter sounding out; number options are just spoken
+// clearly (native speech already pronounces numbers well). Based on the
+// actual option content rather than the activity type, since math cards
+// (like Shapes & Colors) and the mixed Boss Quiz can have either kind.
+function isNumericLabel(label){
+  const t = stripForSpeech(label).trim();
+  return /^-?\d+(\.\d+)?$/.test(t) || /^(one|two|three|four|five|six|seven|eight|nine|ten)$/i.test(t);
+}
+function speakableOptionsList(item){
+  const opts = item.options.map(o => stripForSpeech(o.label));
+  const looksNumeric = opts.every(o => /^-?\d+(\.\d+)?$/.test(o.trim()) || /^(one|two|three|four|five|six|seven|eight|nine|ten)$/i.test(o.trim()));
+  if(!looksNumeric){
+    return opts.map(o => spellOutForSpeech(o)).join('. Or... ');
+  }
+  return opts.join(', or ');
+}
 function speakCurrentCard(activityKey){
   const st = engineState;
   if(!st || !st.deck || !st.deck[st.idx]) return;
   const item = st.deck[st.idx];
-  const intro = ACTIVITY_INTROS[activityKey] || "Let's go!";
+  // Only announce the activity name on the very first card of a session —
+  // repeating "Math Mission time!" before every single card gets old fast.
+  const intro = st.idx === 0 ? (ACTIVITY_INTROS[activityKey] || "Let's go!") + ' ' : '';
   const question = stripForSpeech(item.stageHTML);
-  speakText(`${intro} ${question}. Pick the correct answer.`);
+  const optionsSpeech = speakableOptionsList(item);
+  speakText(`${intro}${question}. Your choices are: ${optionsSpeech}. Pick the correct answer.`);
 }
 function speakWritingDirections(){
   if(!writeState || !writeState.words) return;
   const w = writeState.words[writeState.idx];
   const kind = w.length <= 2 ? 'letter' : 'word';
-  speakText(`Trace each word carefully. Trace the ${kind} "${w}".`);
+  // Only say the general "Trace each word carefully" framing on the first
+  // word of the session; after that, just name the next word to trace.
+  const intro = writeState.idx === 0 ? 'Trace each word carefully. ' : '';
+  speakText(`${intro}Trace the ${kind} "${w}".`);
 }
 function speakSimple(text){ speakText(text); }
 function readAloudButtonHTML(onclickJs, label){
@@ -726,11 +786,18 @@ function launchConfetti(){
 var view = 'home';
 var ctx = {};
 function goto(v, c={}){
-  if(memState && memState.timerId && !memState.finished){ clearInterval(memState.timerId); memState.timerId = null; }
-  if(activeRecognition){ try{ activeRecognition.stop(); }catch(e){} activeRecognition = null; }
   view=v; ctx=c; render(); window.scrollTo({top:0,behavior:'smooth'});
 }
 function render(overrideView, overrideCtx){
+  // Stop anything left running from the previous screen — an in-progress
+  // read-aloud, the memory-game timer, or an active voice dictation —
+  // before drawing the new screen. This runs here (not just in goto())
+  // so it also covers direct render() calls like the day-complete
+  // celebration modal, which fires from markSectionComplete rather than
+  // through goto().
+  if(memState && memState.timerId && !memState.finished){ clearInterval(memState.timerId); memState.timerId = null; }
+  if(activeRecognition){ try{ activeRecognition.stop(); }catch(e){} activeRecognition = null; }
+  if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
   const v = overrideView || view;
   const c = overrideCtx || ctx;
   const app = document.getElementById('app');
@@ -986,7 +1053,8 @@ function speakCurrentHint(){
   const item = st.deck[st.idx];
   if(st.tries >= 4){
     const correctLabel = item.options.find(o=>o.correct).label;
-    speakText(`Here's the answer: ${stripForSpeech(correctLabel)}. ${stripForSpeech(item.explain)}`);
+    const spokenAnswer = isNumericLabel(correctLabel) ? stripForSpeech(correctLabel) : spellOutForSpeech(correctLabel);
+    speakText(`Here's the answer: ${spokenAnswer}. ${stripForSpeech(item.explain)}`);
   } else if(st.tries >= 1){
     const hintText = item.hints[Math.min(st.tries-1, item.hints.length-1)];
     speakText(`Hint ${st.tries}: ${stripForSpeech(hintText)}`);
@@ -1551,12 +1619,21 @@ function initMemoryGame(d){
   const cols = pairs <= 4 ? 4 : (pairs <= 6 ? 4 : 5);
   const grid = document.getElementById('memgrid');
   if(grid) grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-  memState = {cards, first:null, second:null, lock:false, dayNum:d, pairs, mistakes:0, startTime:Date.now(), timerId:null, finished:false};
-  memState.timerId = setInterval(updateMemTimer, 1000);
+  // Timer does NOT start yet — only once the first card is actually flipped
+  // (see startMemTimerIfNeeded in flipMem). This way, time spent reading the
+  // directions, listening to Read Aloud, or just looking at the board before
+  // playing never counts against Joseph's time.
+  memState = {cards, first:null, second:null, lock:false, dayNum:d, pairs, mistakes:0, startTime:null, timerId:null, finished:false, started:false};
   renderMemGrid();
 }
+function startMemTimerIfNeeded(){
+  if(!memState || memState.started) return;
+  memState.started = true;
+  memState.startTime = Date.now();
+  memState.timerId = setInterval(updateMemTimer, 1000);
+}
 function updateMemTimer(){
-  if(!memState || memState.finished) return;
+  if(!memState || memState.finished || !memState.started) return;
   const el = document.getElementById('mem-timer');
   if(!el) return;
   const secs = Math.floor((Date.now()-memState.startTime)/1000);
@@ -1577,6 +1654,7 @@ function flipMem(id){
   if(memState.lock || memState.finished) return;
   const c = memState.cards.find(x=>x.id===id);
   if(c.flipped||c.matched) return;
+  startMemTimerIfNeeded();
   c.flipped = true;
   if(!memState.first){ memState.first = c; }
   else if(!memState.second){
@@ -1596,7 +1674,7 @@ function flipMem(id){
 function completeMemoryGame(){
   memState.finished = true;
   if(memState.timerId) clearInterval(memState.timerId);
-  const elapsed = Math.round((Date.now()-memState.startTime)/1000);
+  const elapsed = Math.round((Date.now()-(memState.startTime || Date.now()))/1000);
   const pairs = memState.pairs;
   const par = parTimeSeconds(pairs);
   const mistakesPar = pairs;
